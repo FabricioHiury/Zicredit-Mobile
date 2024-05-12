@@ -1,15 +1,14 @@
-import React, {useContext, useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   TextInput,
   TouchableOpacity,
   Text,
   Alert,
-  StyleSheet,
   Image,
 } from 'react-native';
 import axios from 'axios';
-import {AuthContext} from '../../../context/AuthContext/AuthContext';
+import {useAuth} from '../../../context/AuthContext/AuthContext';
 import {styles} from './styles';
 import {HttpRoutes} from '../../../settings/HttpRoutes';
 import Logo from '../../../assets/icons/Logo.png';
@@ -17,27 +16,24 @@ import Logo from '../../../assets/icons/Logo.png';
 const LoginScreen: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const authContext = useContext(AuthContext);
+  const {signIn} = useAuth();
 
   const handleLogin = async () => {
-    if (!authContext) {
-      console.error('Auth context not available');
-      return;
-    }
-
     try {
       const loginUrl = `${HttpRoutes.route}${HttpRoutes.auth.login.url}`;
-      const response = await axios.post(loginUrl, {
-        identifier,
-        password,
-      });
-      authContext.signIn(response.data);
+      const response = await axios.post(loginUrl, {identifier, password});
+
+      if (response.data && response.data.access_token) {
+        signIn(response.data.access_token);
+      } else {
+        console.error('AccessToken not found in response', response.data);
+      }
     } catch (error) {
+      console.error('Erro ao fazer login:', error);
       Alert.alert(
         'Erro de Login',
         'Falha ao efetuar o login, verifique suas credenciais!',
       );
-      console.error('Erro ao fazer login:', error);
     }
   };
 
