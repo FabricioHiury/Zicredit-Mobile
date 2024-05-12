@@ -11,7 +11,7 @@ import axios from 'axios';
 import {useAuth} from '../../../context/AuthContext/AuthContext';
 import {styles} from './styles';
 import {HttpRoutes} from '../../../settings/HttpRoutes';
-import Logo from '../../../assets/icons/Logo.png';
+import Header from '../../../components/Header';
 
 const LoginScreen: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
@@ -23,10 +23,21 @@ const LoginScreen: React.FC = () => {
       const loginUrl = `${HttpRoutes.route}${HttpRoutes.auth.login.url}`;
       const response = await axios.post(loginUrl, {identifier, password});
 
-      if (response.data && response.data.access_token) {
-        signIn(response.data.access_token);
+      if (response.data && response.data.access_token && response.data.user) {
+        signIn(
+          response.data.access_token,
+          response.data.user.id,
+          response.data.user.role,
+        );
       } else {
-        console.error('AccessToken not found in response', response.data);
+        console.error(
+          'AccessToken, UserID, or UserRole not found in response',
+          response.data,
+        );
+        Alert.alert(
+          'Erro de Login',
+          'Falha ao efetuar o login, verifique suas credenciais!',
+        );
       }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
@@ -39,7 +50,7 @@ const LoginScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Image source={Logo} style={styles.logo} />
+      <Header isMenu={false} userRole="" />
       <View style={styles.section}>
         <Text style={styles.title}>Login</Text>
         <TextInput

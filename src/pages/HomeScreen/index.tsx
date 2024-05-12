@@ -8,13 +8,14 @@ import {
   RefreshControl,
 } from 'react-native';
 import {styles} from './styles';
-import Logo from '../../assets/icons/Logo.png';
 import {
   getProjects,
   getInvestments,
   getSellers,
   getCompanies,
 } from '../../settings/api';
+import Header from '../../components/Header';
+import {useAuth} from '../../context/AuthContext/AuthContext';
 
 export function HomeScreen() {
   const [data, setData] = useState({
@@ -25,6 +26,7 @@ export function HomeScreen() {
   });
   const [error, setError] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const {userRole} = useAuth();
 
   const fetchData = async () => {
     setRefreshing(true);
@@ -62,7 +64,7 @@ export function HomeScreen() {
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
       }>
-      <Image source={Logo} style={styles.logo} />
+      {userRole && <Header isMenu={true} userRole={userRole} />}
       <View style={styles.section}>
         {error ? (
           <Text style={styles.text}>Não foi possível carregar os dados.</Text>
