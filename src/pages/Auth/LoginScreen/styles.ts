@@ -3,14 +3,21 @@ import {StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
     backgroundColor: '#020202',
   },
-  logo: {
-    alignContent: 'center',
+  section: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    width: '100%',
+  },
+  logo: {
+    width: 100,
+    height: 20,
+    marginTop: 20,
+    resizeMode: 'contain',
   },
   input: {
     width: '100%',
@@ -21,7 +28,10 @@ export const styles = StyleSheet.create({
     backgroundColor: '#121212',
     color: '#FFFFFF80',
     borderRadius: 10,
+    paddingHorizontal: 30,
+    paddingVertical: 20,
     gap: 4,
+    fontSize: 16,
   },
   button: {
     backgroundColor: '#FFCC00',
@@ -31,11 +41,18 @@ export const styles = StyleSheet.create({
     borderRadius: 50,
     paddingHorizontal: 50,
     paddingVertical: 10,
+    marginTop: 20,
   },
   buttonText: {
     color: '#000',
     textAlign: 'center',
     fontWeight: '500',
     fontSize: 18,
+  },
+  title: {
+    color: 'white',
+    fontSize: 30,
+    fontWeight: '500',
+    marginBottom: 10,
   },
 });

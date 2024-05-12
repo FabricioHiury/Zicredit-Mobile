@@ -44,25 +44,28 @@ const LoginScreen: React.FC = () => {
   return (
     <View style={styles.container}>
       <Image source={Logo} style={styles.logo} />
-      <TextInput
-        style={styles.input}
-        placeholder="Digite seu CPF/CNPJ"
-        placeholderTextColor="#FFFFFF80"
-        value={identifier}
-        onChangeText={setIdentifier}
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Digite sua senha"
-        placeholderTextColor="#FFFFFF80"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Entrar</Text>
-      </TouchableOpacity>
+      <View style={styles.section}>
+        <Text style={styles.title}>Login</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Digite seu CPF/CNPJ"
+          placeholderTextColor="#FFFFFF80"
+          value={identifier}
+          onChangeText={setIdentifier}
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Digite sua senha"
+          placeholderTextColor="#FFFFFF80"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Entrar</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
