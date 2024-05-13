@@ -23,6 +23,10 @@ export const HttpRoutes = {
       url: 'investment/sellers',
       type: 'get',
     },
+    getTotalInvestment: {
+      url: 'investment/total-invested-overall',
+      type: 'get',
+    }
   },
   company: {
     getAll: {

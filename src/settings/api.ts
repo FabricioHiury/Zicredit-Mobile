@@ -26,3 +26,5 @@ export const getInvestments = () => api.get(HttpRoutes.investment.getAll.url);
 export const getSellers = () =>
   api.get(HttpRoutes.investment.getAllSellers.url);
 export const getCompanies = () => api.get(HttpRoutes.company.getAll.url);
+export const getAllInvestment = () =>
+  api.get(HttpRoutes.investment.getTotalInvestment.url);
