@@ -15,9 +15,9 @@ export const styles = StyleSheet.create({
   },
   logo: {
     width: 100,
-    height: 20,
-    marginTop: 20,
+    height: 40,
     resizeMode: 'contain',
+    marginBottom: 20, // Adicionado para dar um espaçamento abaixo da logo
   },
   input: {
     width: '100%',
@@ -30,7 +30,6 @@ export const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 30,
     paddingVertical: 20,
-    gap: 4,
     fontSize: 16,
   },
   button: {
