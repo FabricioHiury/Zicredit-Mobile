@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Alert, ScrollView, RefreshControl, Text, View} from 'react-native';
-import {styles} from './styles';
+import { useStyles } from './styles';
 import {
   getProjects,
   getInvestments,
@@ -12,6 +12,7 @@ import Header from '../../components/Header';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 
 export function HomeScreen() {
+  const styles = useStyles();
   const [data, setData] = useState({
     projects: 0,
     investments: 0,

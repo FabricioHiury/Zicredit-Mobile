@@ -1,15 +1,15 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Router} from './src/Routes/Router';
 import {AuthProvider} from './src/context/AuthContext/AuthContext';
-
-const Stack = createNativeStackNavigator();
+import { ThemeProvider } from './src/assets/themes/ThemeContext';
 
 const App: React.FC = () => {
   return (
-    <AuthProvider>
-      <Router />
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <Router />
+      </AuthProvider>
+    </ThemeProvider>
   );
 };
 

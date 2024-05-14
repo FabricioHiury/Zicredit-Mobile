@@ -1,9 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Switch, Text, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {styles} from './styles';
-import { useAuth } from '../../context/AuthContext/AuthContext';
+import {useAuth} from '../../context/AuthContext/AuthContext';
+import {useTheme} from '../../assets/themes/ThemeContext';
 
 interface MenuProps {
   isVisible: boolean;
@@ -12,12 +13,8 @@ interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
-  const {signOut} = useAuth(); 
-  const [darkMode, setDarkMode] = useState(false);
-
-  const handleToggleDarkMode = () => {
-    setDarkMode(!darkMode);
-  };
+  const {signOut} = useAuth();
+  const {darkMode, toggleDarkMode} = useTheme();
 
   const handleSignOut = async () => {
     await signOut();
@@ -75,11 +72,27 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
       animationIn="slideInLeft"
       animationOut="slideOutLeft"
       style={styles.modal}>
-      <View style={styles.menuContainer}>
+      <View
+        style={[
+          styles.menuContainer,
+          {backgroundColor: darkMode ? '#020202FA' : '#FBFBFB'},
+        ]}>
         <View style={styles.menuHeader}>
-          <Text style={styles.menuTitle}>Menu</Text>
+          <Text
+            style={[
+              styles.menuTitle,
+              {color: darkMode ? '#FFFFFF' : '#121212'},
+            ]}>
+            Menu
+          </Text>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeButtonText}>X</Text>
+            <Text
+              style={[
+                styles.closeButtonText,
+                {color: darkMode ? '#FFFFFF' : '#121212'},
+              ]}>
+              X
+            </Text>
           </TouchableOpacity>
         </View>
         {filteredMenuItems.map((item, index) =>
@@ -92,12 +105,18 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
                   color="#FFCC00"
                   style={styles.menuIcon}
                 />
-                <Text style={styles.menuItemText}>{item.title}</Text>
+                <Text
+                  style={[
+                    styles.menuItemText,
+                    {color: darkMode ? '#FFFFFF' : '#121212'},
+                  ]}>
+                  {item.title}
+                </Text>
                 {item.toggle && (
                   <Switch
                     trackColor={{false: '#767577', true: '#FFCC00'}}
                     thumbColor={darkMode ? '#FFFFFF' : '#FFFFFF'}
-                    onValueChange={handleToggleDarkMode}
+                    onValueChange={toggleDarkMode}
                     value={darkMode}
                     style={styles.switchStyle}
                   />
@@ -107,7 +126,7 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
           ) : (
             <View key={index} style={styles.logoutItem}>
               <TouchableOpacity
-                onPress={handleSignOut} // Chame handleSignOut ao invés de onClose
+                onPress={handleSignOut}
                 style={styles.menuOptionContainer}>
                 <Icon
                   name={item.icon}
@@ -115,7 +134,13 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
                   color="#FFCC00"
                   style={styles.menuIcon}
                 />
-                <Text style={styles.menuItemText}>{item.title}</Text>
+                <Text
+                  style={[
+                    styles.menuItemText,
+                    {color: darkMode ? '#FFFFFF' : '#121212'},
+                  ]}>
+                  {item.title}
+                </Text>
               </TouchableOpacity>
             </View>
           ),
