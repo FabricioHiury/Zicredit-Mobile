@@ -3,6 +3,7 @@ import {Switch, Text, TouchableOpacity, View} from 'react-native';
 import Modal from 'react-native-modal';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {styles} from './styles';
+import { useAuth } from '../../context/AuthContext/AuthContext';
 
 interface MenuProps {
   isVisible: boolean;
@@ -11,29 +12,47 @@ interface MenuProps {
 }
 
 const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
+  const {signOut} = useAuth(); 
   const [darkMode, setDarkMode] = useState(false);
 
   const handleToggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
 
+  const handleSignOut = async () => {
+    await signOut();
+    onClose();
+  };
+
   const menuItems = [
     {
       title: 'Perfil',
-      icon: 'account_circle',
+      icon: 'account-circle',
       roles: ['ZICREDIT', 'SELLER', 'COMPANY', 'INVESTOR'],
     },
-    {title: 'Cadastrar construtora', icon: 'add_circle', roles: ['ZICREDIT']},
     {
-      title: 'Cadastrar empreendimento',
-      icon: 'add_circle',
+      title: 'Cadastrar construtora',
+      icon: 'add-circle-outline',
       roles: ['ZICREDIT'],
     },
-    {title: 'Cadastrar investidor', icon: 'add_circle', roles: ['ZICREDIT']},
-    {title: 'Cadastrar vendedor', icon: 'add_circle', roles: ['ZICREDIT']},
+    {
+      title: 'Cadastrar empreendimento',
+      icon: 'business',
+      roles: ['ZICREDIT'],
+    },
+    {
+      title: 'Cadastrar investidor',
+      icon: 'person-add',
+      roles: ['ZICREDIT'],
+    },
+    {
+      title: 'Cadastrar vendedor',
+      icon: 'person-add-alt-1',
+      roles: ['ZICREDIT'],
+    },
     {
       title: 'Modo escuro',
-      icon: 'dark_mode',
+      icon: 'brightness-6',
       roles: ['ZICREDIT', 'SELLER', 'COMPANY', 'INVESTOR'],
       toggle: true,
     },
@@ -43,6 +62,10 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
       roles: ['ZICREDIT', 'SELLER', 'COMPANY', 'INVESTOR'],
     },
   ];
+
+  const filteredMenuItems = menuItems.filter(item =>
+    item.roles.includes(userRole),
+  );
 
   return (
     <Modal
@@ -59,7 +82,7 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
             <Text style={styles.closeButtonText}>X</Text>
           </TouchableOpacity>
         </View>
-        {menuItems.map((item, index) =>
+        {filteredMenuItems.map((item, index) =>
           item.title !== 'Sair do aplicativo' ? (
             <View key={index} style={styles.menuItem}>
               <View style={styles.menuOptionContainer}>
@@ -84,7 +107,7 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
           ) : (
             <View key={index} style={styles.logoutItem}>
               <TouchableOpacity
-                onPress={onClose}
+                onPress={handleSignOut} // Chame handleSignOut ao invés de onClose
                 style={styles.menuOptionContainer}>
                 <Icon
                   name={item.icon}

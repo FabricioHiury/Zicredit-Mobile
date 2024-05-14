@@ -1,22 +1,25 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
+  scrollViewContent: {
+    flexGrow: 1,
+    padding: 10,
+    backgroundColor: '#020202FA'
+  },
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: '#020202',
+    padding: 10,
   },
   labelText: {
     color: '#FFF',
     fontSize: 18,
     fontWeight: 'bold',
-    alignSelf: 'flex-start',
-    marginLeft: '5%',
-    marginTop: 10,
+    paddingVertical: 5,
   },
   valueText: {
     color: '#FFFFFF',
-    fontSize: 22,
+    fontSize: 40,
     fontWeight: '700',
   },
   highlightBox: {
@@ -29,21 +32,36 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 10,
   },
+  fullWidthBox: {
+    borderColor: '#FFCC00',
+    borderWidth: 2,
+    marginVertical: 10,
+    width: '100%',
+    justifyContent: 'center',
+    borderRadius: 10,
+    height: 115,
+    padding: 20,
+  },
   gridItem: {
     borderColor: '#FFCC00',
     borderRadius: 10,
     borderWidth: 2,
-    padding: 10,
-    margin: 5,
-    alignItems: 'center',
+    padding: 20,
+    marginVertical: 5,
+    alignItems: 'flex-start',
     justifyContent: 'center',
-    width: '45%',
+    width: '100%',
+    height: 115,
   },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'space-evenly',
     width: '100%',
-    marginTop: 20,
+    marginTop: 10,
+    justifyContent: 'space-between',
+  },
+  gridItemContainer: {
+    width: '45%', 
+    marginVertical: 5,
   },
 });

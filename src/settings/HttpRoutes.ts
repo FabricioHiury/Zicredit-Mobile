@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.11.6:80/';
+const baseUrl = 'http://192.168.1.4:80/';
 
 export const HttpRoutes = {
   route: baseUrl,
@@ -26,7 +26,7 @@ export const HttpRoutes = {
     getTotalInvestment: {
       url: 'investment/total-invested-overall',
       type: 'get',
-    }
+    },
   },
   company: {
     getAll: {

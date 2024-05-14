@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   TextInput,
@@ -12,6 +12,7 @@ import {useAuth} from '../../../context/AuthContext/AuthContext';
 import {styles} from './styles';
 import {HttpRoutes} from '../../../settings/HttpRoutes';
 import Header from '../../../components/Header';
+import Logo from '../../../assets/icons/Logo.png';
 
 const LoginScreen: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
@@ -50,7 +51,7 @@ const LoginScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Header isMenu={false} userRole="" />
+      <Image source={Logo} style={styles.logo} />
       <View style={styles.section}>
         <Text style={styles.title}>Login</Text>
         <TextInput

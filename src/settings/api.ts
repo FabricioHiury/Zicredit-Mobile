@@ -21,10 +21,45 @@ api.interceptors.request.use(
   },
 );
 
-export const getProjects = () => api.get(HttpRoutes.project.getAll.url);
-export const getInvestments = () => api.get(HttpRoutes.investment.getAll.url);
-export const getSellers = () =>
-  api.get(HttpRoutes.investment.getAllSellers.url);
-export const getCompanies = () => api.get(HttpRoutes.company.getAll.url);
-export const getAllInvestment = () =>
-  api.get(HttpRoutes.investment.getTotalInvestment.url);
+const extractTotal = (response: any) => {
+  if (response?.data?.metadata?.metadata?.total !== undefined) {
+    return response.data.metadata.metadata.total;
+  } else {
+    return 0;
+  }
+};
+
+export const getProjects = async () => {
+  const response = await api.get(HttpRoutes.project.getAll.url);
+  return extractTotal(response);
+};
+
+export const getInvestments = async () => {
+  const response = await api.get(HttpRoutes.investment.getAll.url);
+  return extractTotal(response);
+};
+
+export const getSellers = async () => {
+  const response = await api.get(HttpRoutes.investment.getAllSellers.url);
+  return extractTotal(response);
+};
+
+export const getCompanies = async () => {
+  const response = await api.get(HttpRoutes.company.getAll.url);
+  return extractTotal(response);
+};
+
+export const getAllInvestment = async () => {
+  const response = await api.get(HttpRoutes.investment.getTotalInvestment.url);
+  if (response?.data?.metadata !== undefined) {
+    return {
+      totalInvested: response.data.metadata.totalInvested || 0,
+      totalYield: response.data.metadata.totalYield || 0,
+    };
+  } else {
+    return {
+      totalInvested: 0,
+      totalYield: 0,
+    };
+  }
+};

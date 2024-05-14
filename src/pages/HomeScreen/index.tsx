@@ -27,19 +27,19 @@ export function HomeScreen() {
   const fetchData = async () => {
     setRefreshing(true);
     try {
-      const projectsResponse = await getProjects();
-      const investmentsResponse = await getInvestments();
-      const sellersResponse = await getSellers();
-      const companiesResponse = await getCompanies();
-      const totalInvestmentResponse = await getAllInvestment();
+      const projectsTotal = await getProjects();
+      const investmentsTotal = await getInvestments();
+      const sellersTotal = await getSellers();
+      const companiesTotal = await getCompanies();
+      const {totalInvested, totalYield} = await getAllInvestment();
 
       setData({
-        totalInvested: totalInvestmentResponse.data?.totalInvested || 0,
-        totalYield: totalInvestmentResponse.data?.totalYield || 0,
-        projects: projectsResponse.data?.length || 0,
-        investments: investmentsResponse.data?.length || 0,
-        sellers: sellersResponse.data?.length || 0,
-        companies: companiesResponse.data?.length || 0,
+        totalInvested: totalInvested,
+        totalYield: totalYield,
+        projects: projectsTotal,
+        investments: investmentsTotal,
+        sellers: sellersTotal,
+        companies: companiesTotal,
       });
       setError(false);
     } catch (error) {
@@ -59,7 +59,7 @@ export function HomeScreen() {
 
   return (
     <ScrollView
-      contentContainerStyle={styles.container}
+      contentContainerStyle={styles.scrollViewContent}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={fetchData} />
       }>
@@ -72,33 +72,41 @@ export function HomeScreen() {
         ) : (
           <>
             <Text style={styles.labelText}>Total Captado</Text>
-            <View style={styles.highlightBox}>
+            <View style={styles.fullWidthBox}>
               <Text style={styles.valueText}>{data.totalInvested}</Text>
             </View>
             <Text style={styles.labelText}>
               Valor Total a Pagar aos Investidores
             </Text>
-            <View style={styles.highlightBox}>
+            <View style={styles.fullWidthBox}>
               <Text style={styles.valueText}>{data.totalYield}</Text>
             </View>
             <View style={styles.gridContainer}>
-              <View style={styles.gridItem}>
+              <View style={styles.gridItemContainer}>
                 <Text style={styles.labelText}>
                   Empreendimentos Cadastrados
                 </Text>
-                <Text style={styles.valueText}>{data.projects}</Text>
+                <View style={styles.gridItem}>
+                  <Text style={styles.valueText}>{data.projects}</Text>
+                </View>
               </View>
-              <View style={styles.gridItem}>
+              <View style={styles.gridItemContainer}>
                 <Text style={styles.labelText}>Investidores Cadastrados</Text>
-                <Text style={styles.valueText}>{data.investments}</Text>
+                <View style={styles.gridItem}>
+                  <Text style={styles.valueText}>{data.investments}</Text>
+                </View>
               </View>
-              <View style={styles.gridItem}>
+              <View style={styles.gridItemContainer}>
                 <Text style={styles.labelText}>Vendedores Cadastrados</Text>
-                <Text style={styles.valueText}>{data.sellers}</Text>
+                <View style={styles.gridItem}>
+                  <Text style={styles.valueText}>{data.sellers}</Text>
+                </View>
               </View>
-              <View style={styles.gridItem}>
+              <View style={styles.gridItemContainer}>
                 <Text style={styles.labelText}>Construtoras Cadastradas</Text>
-                <Text style={styles.valueText}>{data.companies}</Text>
+                <View style={styles.gridItem}>
+                  <Text style={styles.valueText}>{data.companies}</Text>
+                </View>
               </View>
             </View>
           </>
