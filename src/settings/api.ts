@@ -29,22 +29,22 @@ const extractTotal = (response: any) => {
   }
 };
 
-export const getProjects = async () => {
+export const getTotalProjects = async () => {
   const response = await api.get(HttpRoutes.project.getAll.url);
   return extractTotal(response);
 };
 
-export const getInvestments = async () => {
+export const getTotalInvestments = async () => {
   const response = await api.get(HttpRoutes.investment.getAll.url);
   return extractTotal(response);
 };
 
-export const getSellers = async () => {
+export const getTotalSellers = async () => {
   const response = await api.get(HttpRoutes.investment.getAllSellers.url);
   return extractTotal(response);
 };
 
-export const getCompanies = async () => {
+export const getTotalCompanies = async () => {
   const response = await api.get(HttpRoutes.company.getAll.url);
   return extractTotal(response);
 };
@@ -62,4 +62,24 @@ export const getAllInvestment = async () => {
       totalYield: 0,
     };
   }
+};
+
+export const getProjects = async () => {
+  const response = await api.get(HttpRoutes.project.getAll.url);
+  return response.data.projects || [];
+};
+
+export const getInvestments = async () => {
+  const response = await api.get(HttpRoutes.investment.getAll.url);
+  return response.data.investments || [];
+};
+
+export const getSellers = async () => {
+  const response = await api.get(HttpRoutes.investment.getAllSellers.url);
+  return response.data.sellers || [];
+};
+
+export const getCompanies = async () => {
+  const response = await api.get(HttpRoutes.company.getAll.url);
+  return response.data.companies || [];
 };
