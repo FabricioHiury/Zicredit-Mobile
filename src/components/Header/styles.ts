@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
 import {useTheme} from '../../assets/themes/ThemeContext';
+import {StyleSheet} from 'react-native';
 
 export const useStyles = () => {
   const {theme} = useTheme();
@@ -15,13 +15,18 @@ export const useStyles = () => {
     },
     logo: {
       width: 100,
-      height: 40,
+      height: 50,
       resizeMode: 'contain',
     },
-    menuButton: {},
+    menuButton: {
+      fontSize: 20,
+    },
     menuIcon: {
-      fontSize: 24,
+      fontSize: 20,
       color: theme.colors.textColor,
+    },
+    arrowIcon: {
+      paddingLeft: 5, 
     },
     placeholder: {
       padding: 10,
