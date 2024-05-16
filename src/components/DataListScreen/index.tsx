@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
   Alert,
   RefreshControl,
+  TouchableOpacity,
 } from 'react-native';
 import {useStyles} from './styles';
 import {
@@ -16,6 +17,7 @@ import {
 } from '../../settings/api';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import Header from '../Header';
+import {useNavigation} from '@react-navigation/native';
 
 const fetchDataFunctionMap = {
   projects: getProjects,
@@ -32,9 +34,11 @@ type DataListScreenProps = {
   };
 };
 
-const renderItem = (item: any, type: string, styles: any) => {
+const renderItem = (item: any, type: string, styles: any, navigation: any) => {
   let primaryText = '';
   let secondaryText = '';
+  let id = item.id;
+  let itemType = type;
 
   switch (type) {
     case 'companies':
@@ -46,8 +50,10 @@ const renderItem = (item: any, type: string, styles: any) => {
       secondaryText = item.location;
       break;
     case 'investments':
-      primaryText = item.name;
-      secondaryText = item.cpf;
+      primaryText = item.user.name;
+      secondaryText = item.user.cpf;
+      id = item.user.id; 
+      itemType = 'user';
       break;
     case 'sellers':
       primaryText = item.name;
@@ -59,10 +65,13 @@ const renderItem = (item: any, type: string, styles: any) => {
   }
 
   return (
-    <View key={item.id} style={styles.itemContainer}>
+    <TouchableOpacity
+      key={item.id}
+      style={styles.itemContainer}
+      onPress={() => navigation.navigate('Details', {id, type: itemType})}>
       <Text style={styles.itemTextPrimary}>{primaryText}</Text>
       <Text style={styles.itemTextSecondary}>{secondaryText}</Text>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -74,9 +83,11 @@ export function DataListScreen({route}: DataListScreenProps) {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
   const {userRole} = useAuth();
+  const navigation = useNavigation();
 
   const fetchData = async () => {
     setLoading(true);
+    setRefreshing(true);
     try {
       const fetchFunction = fetchDataFunctionMap[type];
       if (fetchFunction) {
@@ -95,6 +106,7 @@ export function DataListScreen({route}: DataListScreenProps) {
       );
     }
     setLoading(false);
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -118,7 +130,7 @@ export function DataListScreen({route}: DataListScreenProps) {
         ) : data.length === 0 ? (
           <Text style={styles.errorText}>Nenhum dado disponível.</Text>
         ) : (
-          data.map(item => renderItem(item, type, styles))
+          data.map(item => renderItem(item, type, styles, navigation))
         )}
       </View>
     </ScrollView>

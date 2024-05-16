@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import {styles} from './styles';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import {useTheme} from '../../assets/themes/ThemeContext';
+import {useNavigation, NavigationProp} from '@react-navigation/native';
+import {RootStackParamList} from '../../types/navigation';
 
 interface MenuProps {
   isVisible: boolean;
@@ -15,10 +17,16 @@ interface MenuProps {
 const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
   const {signOut} = useAuth();
   const {darkMode, toggleDarkMode} = useTheme();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   const handleSignOut = async () => {
     await signOut();
     onClose();
+  };
+
+  const handleProfilePress = () => {
+    onClose();
+    navigation.navigate('Profile');
   };
 
   const menuItems = [
@@ -26,6 +34,7 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
       title: 'Perfil',
       icon: 'account-circle',
       roles: ['ZICREDIT', 'SELLER', 'COMPANY', 'INVESTOR'],
+      action: handleProfilePress,
     },
     {
       title: 'Cadastrar construtora',
@@ -97,7 +106,10 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
         </View>
         {filteredMenuItems.map((item, index) =>
           item.title !== 'Sair do aplicativo' ? (
-            <View key={index} style={styles.menuItem}>
+            <TouchableOpacity
+              key={index}
+              style={styles.menuItem}
+              onPress={item.action ? item.action : undefined}>
               <View style={styles.menuOptionContainer}>
                 <Icon
                   name={item.icon}
@@ -122,7 +134,7 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
                   />
                 )}
               </View>
-            </View>
+            </TouchableOpacity>
           ) : (
             <View key={index} style={styles.logoutItem}>
               <TouchableOpacity

@@ -8,9 +8,27 @@ export const HttpRoutes = {
       type: 'post',
     },
   },
+  user: {
+    getAll: {
+      url: 'user',
+      type: 'get',
+    },
+    getById: {
+      url: 'user/:id',
+      type: 'get',
+    },
+    getUserSeller: {
+      url: 'user?typeUser=SELLER',
+      type: 'get',
+    }
+  },
   project: {
     getAll: {
       url: 'projects',
+      type: 'get',
+    },
+    getById: {
+      url: 'projects/:id',
       type: 'get',
     },
   },
@@ -25,12 +43,16 @@ export const HttpRoutes = {
     },
     getTotalInvestment: {
       url: 'investment/total-invested-overall',
-      type: 'get',
+      type: 'post',
     },
   },
   company: {
     getAll: {
       url: 'company',
+      type: 'get',
+    },
+    getById: {
+      url: 'company/:id',
       type: 'get',
     },
   },

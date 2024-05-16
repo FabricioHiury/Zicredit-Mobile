@@ -4,6 +4,8 @@ import {RouteProp} from '@react-navigation/native';
 export type RootStackParamList = {
   Home: undefined;
   DataList: {type: 'projects' | 'investments' | 'sellers' | 'companies'};
+  Profile: undefined;
+  Details: { id: string; type: 'user' | 'project' | 'company' };
 };
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<
