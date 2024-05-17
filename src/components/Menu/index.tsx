@@ -29,6 +29,18 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
     navigation.navigate('Profile');
   };
 
+  const handleNavigate = <T extends keyof RootStackParamList>(
+    screen: T,
+    params?: RootStackParamList[T],
+  ) => {
+    onClose();
+    if (params) {
+      navigation.navigate(screen, params);
+    } else {
+      navigation.navigate(screen);
+    }
+  };
+
   const menuItems = [
     {
       title: 'Perfil',
@@ -40,21 +52,25 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
       title: 'Cadastrar construtora',
       icon: 'add-circle-outline',
       roles: ['ZICREDIT'],
+      action: () => handleNavigate('RegisterCompany'),
     },
     {
       title: 'Cadastrar empreendimento',
       icon: 'business',
       roles: ['ZICREDIT'],
+      action: () => handleNavigate('RegisterProject'),
     },
     {
       title: 'Cadastrar investidor',
       icon: 'person-add',
       roles: ['ZICREDIT'],
+      action: () => handleNavigate('RegisterInvestorScreen'),
     },
     {
       title: 'Cadastrar vendedor',
       icon: 'person-add-alt-1',
       roles: ['ZICREDIT'],
+      action: () => handleNavigate('RegisterSeller'),
     },
     {
       title: 'Modo escuro',
@@ -66,6 +82,7 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
       title: 'Sair do aplicativo',
       icon: 'logout',
       roles: ['ZICREDIT', 'SELLER', 'COMPANY', 'INVESTOR'],
+      action: handleSignOut,
     },
   ];
 

@@ -20,6 +20,10 @@ export const HttpRoutes = {
     getUserSeller: {
       url: 'user?typeUser=SELLER',
       type: 'get',
+    },
+    createUser: {
+      url: 'user',
+      type: 'post',
     }
   },
   project: {
@@ -30,6 +34,10 @@ export const HttpRoutes = {
     getById: {
       url: 'projects/:id',
       type: 'get',
+    },
+    createProject: {
+      url: 'projects',
+      type: 'post',
     },
   },
   investment: {
@@ -45,6 +53,10 @@ export const HttpRoutes = {
       url: 'investment/total-invested-overall',
       type: 'post',
     },
+    createInvestor: {
+      url: 'investment',
+      type: 'post',
+    }
   },
   company: {
     getAll: {
@@ -54,6 +66,10 @@ export const HttpRoutes = {
     getById: {
       url: 'company/:id',
       type: 'get',
+    },
+    createCompany: {
+      url: 'company',
+      type: 'post',
     },
   },
 };

@@ -2,6 +2,37 @@ import {HttpRoutes} from './HttpRoutes';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+interface CompanyData {
+  name: string;
+  cnpj: string;
+  address: string;
+  bankData: string;
+  phone: string;
+  email: string;
+  userName: string;
+  userEmail: string;
+  userPassword: string;
+  userCpf: string;
+  userPhone: string;
+}
+
+interface ProjectData {
+  name: string;
+  location: string;
+  totalValue: string;
+  companyId: string;
+}
+
+interface SellerData {
+  name: string;
+  cpf: string;
+  email: string;
+  password: string;
+  phone: string;
+  role: string;
+  companyId: string;
+}
+
 const api = axios.create({
   baseURL: HttpRoutes.route,
 });
@@ -123,6 +154,7 @@ export const getCompanyById = async (id: string) => {
     const response = await api.get(
       HttpRoutes.company.getById.url.replace(':id', id),
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching company data:', error);
@@ -135,9 +167,59 @@ export const getProjectById = async (id: string) => {
     const response = await api.get(
       HttpRoutes.project.getById.url.replace(':id', id),
     );
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching project data:', error);
+    throw error;
+  }
+};
+
+export const createCompany = async (companyData: any) => {
+  try {
+    const response = await api.post(
+      HttpRoutes.company.createCompany.url,
+      companyData,
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Erro ao criar construtora:', error.response.data);
+    throw error;
+  }
+};
+
+export const createProject = async (projectData: any) => {
+  try {
+    const response = await api.post(
+      HttpRoutes.project.createProject.url,
+      projectData,
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Erro ao criar empreendimento:', error.response.data);
+    throw error;
+  }
+};
+
+export const createUser = async (userData: any) => {
+  try {
+    const response = await api.post(HttpRoutes.user.createUser.url, userData);
+    return response.data;
+  } catch (error: any) {
+    console.error('Erro ao criar usuário:', error.response.data);
+    throw error;
+  }
+};
+
+export const createInvestor = async (investorData: any) => {
+  try {
+    const response = await api.post(
+      HttpRoutes.investment.createInvestor.url,
+      investorData,
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Erro ao criar investidor:', error.response.data);
     throw error;
   }
 };
