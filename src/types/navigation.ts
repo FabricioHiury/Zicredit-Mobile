@@ -5,7 +5,11 @@ export type RootStackParamList = {
   Home: undefined;
   DataList: {type: 'projects' | 'investments' | 'sellers' | 'companies'};
   Profile: undefined;
-  Details: { id: string; type: 'user' | 'project' | 'company' };
+  Details: {id: string; type: 'projects' | 'user' | 'sellers' | 'companies'};
+  RegisterCompany: undefined;
+  RegisterProject: undefined;
+  RegisterSeller: undefined;
+  RegisterInvestorScreen: undefined;
 };
 
 export type HomeScreenNavigationProp = NativeStackNavigationProp<

@@ -24,13 +24,14 @@ const DetailsScreen: React.FC = () => {
       try {
         let fetchFunction;
         switch (type) {
+          case 'sellers':
           case 'user':
             fetchFunction = getUserById;
             break;
-          case 'project':
+          case 'projects':
             fetchFunction = getProjectById;
             break;
-          case 'company':
+          case 'companies':
             fetchFunction = getCompanyById;
             break;
           default:
@@ -72,25 +73,25 @@ const DetailsScreen: React.FC = () => {
         {data ? (
           <>
             <Text style={styles.labelText}>Nome: {data.name}</Text>
-            {type === 'company' && (
+            {type === 'companies' && (
               <Text style={styles.labelText}>Endereço: {data.address}</Text>
             )}
-            {type === 'user' && (
-              <Text style={styles.labelText}>CPF: {data.cpf}</Text>
+            {(type === 'sellers' || type === 'user') && (
+              <>
+                <Text style={styles.labelText}>CPF: {data.cpf}</Text>
+                <Text style={styles.labelText}>Email: {data.email}</Text>
+                <Text style={styles.labelText}>Telefone: {data.phone}</Text>
+              </>
             )}
-            {type === 'user' && (
-              <Text style={styles.labelText}>Email: {data.email}</Text>
-            )}
-            {type === 'user' && (
-              <Text style={styles.labelText}>Telefone: {data.phone}</Text>
-            )}
-            {type === 'project' && (
-              <Text style={styles.labelText}>Localização: {data.location}</Text>
-            )}
-            {type === 'project' && (
-              <Text style={styles.labelText}>
-                Valor Total: {data.totalValue}
-              </Text>
+            {type === 'projects' && (
+              <>
+                <Text style={styles.labelText}>
+                  Localização: {data.location}
+                </Text>
+                <Text style={styles.labelText}>
+                  Valor Total: {data.totalValue}
+                </Text>
+              </>
             )}
           </>
         ) : (
