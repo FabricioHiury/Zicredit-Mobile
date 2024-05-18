@@ -21,6 +21,7 @@ const ProfileScreen: React.FC = () => {
           setError(null);
         } catch (err) {
           console.error('Error fetching user data:', err);
+          setError('Failed to load user data');
         } finally {
           setLoading(false);
         }

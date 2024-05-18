@@ -88,13 +88,15 @@ export function HomeScreen({navigation}: HomeScreenProps) {
           <>
             <Text style={styles.labelText}>Total Captado</Text>
             <View style={styles.fullWidthBox}>
-              <Text style={styles.valueText}>R$ {data.totalInvested}</Text>
+              <Text style={styles.valueText}>R$ {data.totalInvested.toLocaleString('pt-BR')}</Text>
             </View>
             <Text style={styles.labelText}>
               Valor Total a Pagar aos Investidores
             </Text>
             <View style={styles.fullWidthBox}>
-              <Text style={styles.valueText}>R$ {data.totalYield}</Text>
+              <Text style={styles.valueText}>
+                R$ {data.totalYield.toLocaleString('pt-BR')}
+              </Text>
             </View>
             <View style={styles.gridContainer}>
               <TouchableOpacity

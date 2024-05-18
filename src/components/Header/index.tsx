@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Image, TouchableOpacity} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useIsFocused} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Logo from '../../assets/icons/Logo.png';
 import LogoLightMode from '../../assets/icons/Logo-LightMode.png';
@@ -18,6 +18,13 @@ const Header: React.FC<HeaderProps> = ({isMenu, userRole}) => {
   const styles = useStyles();
   const {darkMode} = useTheme();
   const navigation = useNavigation();
+  const isFocused = useIsFocused(); // Hook to detect if the screen is focused
+
+  useEffect(() => {
+    if (!isFocused) {
+      setMenuVisible(false); // Close menu when the screen is not focused
+    }
+  }, [isFocused]);
 
   const handlePress = () => {
     if (navigation.canGoBack()) {

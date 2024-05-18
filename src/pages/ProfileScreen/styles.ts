@@ -14,7 +14,7 @@ export const useStyles = () => {
       flex: 1,
       alignItems: 'center',
       backgroundColor: theme.colors.background,
-      padding: 10,
+      gap: 10,
     },
     profileContainer: {
       width: '90%',

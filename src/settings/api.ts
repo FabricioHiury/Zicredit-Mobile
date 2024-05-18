@@ -123,6 +123,7 @@ export const getProjects = async () => {
 
 export const getInvestments = async () => {
   const response = await api.get(HttpRoutes.investment.getAll.url);
+  console.log(response.data.metadata);
   return extractData(response);
 };
 
@@ -141,7 +142,7 @@ export const getUserById = async (id: string) => {
     const response = await api.get(
       HttpRoutes.user.getById.url.replace(':id', id),
     );
-    console.log(response.data);
+    console.log(response.data.investments);
     return response.data;
   } catch (error) {
     console.error('Error fetching user data:', error);
@@ -171,6 +172,31 @@ export const getProjectById = async (id: string) => {
     return response.data;
   } catch (error) {
     console.error('Error fetching project data:', error);
+    throw error;
+  }
+};
+
+export const getInvestorById = async (id: string) => {
+  try {
+    const response = await api.get(
+      HttpRoutes.investment.getByUserId.url.replace(':id', id),
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching investor data:', error);
+  }
+};
+
+export const getSellerById = async (id: string) => {
+  try {
+    const response = await api.get(
+      HttpRoutes.user.getSellerId.url.replace(':id', id),
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching seller data:', error);
     throw error;
   }
 };

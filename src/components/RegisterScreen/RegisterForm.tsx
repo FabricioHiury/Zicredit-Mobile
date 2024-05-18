@@ -15,6 +15,7 @@ import {useNavigation} from '@react-navigation/native';
 import {HttpRoutes} from '../../settings/HttpRoutes';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import Header from '../Header';
+import {useTheme} from '../../assets/themes/ThemeContext';
 
 type Endpoint = {
   url: string;
@@ -141,6 +142,7 @@ const RegisterForm = <T extends keyof FormState>({
   type,
 }: RegisterFormProps<T>) => {
   const styles = useStyles();
+  const {theme} = useTheme(); // Extraia o tema aqui
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(initialFormState[type]);
@@ -199,6 +201,7 @@ const RegisterForm = <T extends keyof FormState>({
       key={name as string}
       style={styles.input}
       placeholder={placeholder}
+      placeholderTextColor={theme.colors.placeholder} 
       value={formData[name] as string}
       onChangeText={value => handleChange(name, value)}
       secureTextEntry={secureTextEntry}
@@ -214,6 +217,7 @@ const RegisterForm = <T extends keyof FormState>({
       key={`${index}-${name}`}
       style={styles.input}
       placeholder={placeholder}
+      placeholderTextColor={theme.colors.placeholder} 
       value={(formData as InvestorForm).investments[index][name] as string}
       onChangeText={value => handleInvestmentChange(index, name, value)}
     />
