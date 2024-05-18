@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.1.4:80/';
+const baseUrl = 'http://192.168.11.6:80/';
 
 export const HttpRoutes = {
   route: baseUrl,
@@ -24,7 +24,11 @@ export const HttpRoutes = {
     createUser: {
       url: 'user',
       type: 'post',
-    }
+    },
+    getSellerId: {
+      url: 'user/seller/:id',
+      type: 'get',
+    },
   },
   project: {
     getAll: {
@@ -56,7 +60,11 @@ export const HttpRoutes = {
     createInvestor: {
       url: 'investment',
       type: 'post',
-    }
+    },
+    getByUserId: {
+      url: 'investment/investor/:id',
+      type: 'get',
+    },
   },
   company: {
     getAll: {

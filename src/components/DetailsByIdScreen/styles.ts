@@ -6,34 +6,50 @@ export const useStyles = () => {
   return StyleSheet.create({
     scrollViewContent: {
       flexGrow: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
       backgroundColor: theme.colors.background,
     },
     container: {
       flex: 1,
-      alignItems: 'center',
       backgroundColor: theme.colors.background,
       padding: 10,
     },
     detailsContainer: {
-      width: '90%',
-      padding: 20,
-      borderRadius: 10,
-      borderColor: '#FFCC00',
-      borderWidth: 1,
+      width: '100%',
       alignItems: 'center',
       backgroundColor: theme.colors.background,
+      gap: 10,
     },
-    itemTextPrimary: {
-      fontSize: 20,
+    projectTitle: {
+      fontSize: 22,
+      fontWeight: '500',
+      color: '#FFFFFF',
+      marginBottom: 20,
+    },
+    highlightBox: {
+      borderColor: '#FFCC00',
+      borderWidth: 2,
+      padding: 15,
+      marginVertical: 10,
+      width: '100%',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 10,
+    },
+    labelText: {
+      color: theme.colors.textColor,
+      fontSize: 18,
+      fontWeight: 'bold',
+      paddingVertical: 5,
+    },
+    valueText: {
+      color: theme.colors.textColor,
+      fontSize: 40,
       fontWeight: '700',
-      color: theme.colors.textColor,
     },
-    itemTextSecondary: {
-      fontSize: 16,
-      fontWeight: '400',
+    addressText: {
       color: theme.colors.textColor,
+      fontSize: 22,
+      fontWeight: '500',
     },
     errorText: {
       fontSize: 18,
@@ -41,11 +57,15 @@ export const useStyles = () => {
       textAlign: 'center',
       marginVertical: 16,
     },
-    labelText: {
-      fontSize: 18,
-      fontWeight: '600',
+    projectName: {
       color: theme.colors.textColor,
-      marginBottom: 8,
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    projectValue: {
+      color: theme.colors.textColor,
+      fontSize: 16,
+      fontWeight: '400',
     },
   });
 };

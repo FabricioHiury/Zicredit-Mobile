@@ -11,20 +11,19 @@ export const useStyles = () => {
     scrollViewContent: {
       flexGrow: 1,
       alignItems: 'center',
-      padding: 20,
+      backgroundColor: theme.colors.background,
     },
     container: {
       width: '100%',
       padding: 20,
-      borderRadius: 10,
     },
     input: {
       width: '100%',
       padding: 10,
       marginVertical: 10,
-      borderWidth: 1,
       borderRadius: 10,
-      backgroundColor: '#E1E1E1',
+      backgroundColor: theme.colors.input,
+      fontSize: 16,
     },
     button: {
       backgroundColor: '#FFCC00',
@@ -52,6 +51,7 @@ export const useStyles = () => {
     },
     itemTextPrimary: {
       fontWeight: 'bold',
+      color: 'white',
     },
     itemTextSecondary: {
       color: '#555',
