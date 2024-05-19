@@ -11,12 +11,12 @@ export const useStyles = () => {
     container: {
       flex: 1,
       backgroundColor: theme.colors.background,
-      padding: 10,
     },
     detailsContainer: {
       width: '100%',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       backgroundColor: theme.colors.background,
+      padding: 10,
       gap: 10,
     },
     projectTitle: {
@@ -24,6 +24,7 @@ export const useStyles = () => {
       fontWeight: '500',
       color: '#FFFFFF',
       marginBottom: 20,
+      alignSelf: 'center',
     },
     highlightBox: {
       borderColor: '#FFCC00',
@@ -31,7 +32,7 @@ export const useStyles = () => {
       padding: 15,
       marginVertical: 10,
       width: '100%',
-      alignItems: 'center',
+      alignItems: 'flex-start',
       justifyContent: 'center',
       borderRadius: 10,
     },
@@ -40,11 +41,14 @@ export const useStyles = () => {
       fontSize: 18,
       fontWeight: 'bold',
       paddingVertical: 5,
+      alignSelf: 'flex-start',
+      paddingHorizontal: 5,
     },
     valueText: {
       color: theme.colors.textColor,
       fontSize: 40,
       fontWeight: '700',
+      alignSelf: 'flex-start',
     },
     addressText: {
       color: theme.colors.textColor,

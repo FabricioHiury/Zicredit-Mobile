@@ -24,6 +24,7 @@ export const useStyles = () => {
       borderRadius: 10,
       backgroundColor: theme.colors.input,
       fontSize: 16,
+      color: theme.colors.textColor,
     },
     button: {
       backgroundColor: '#FFCC00',
@@ -55,6 +56,60 @@ export const useStyles = () => {
     },
     itemTextSecondary: {
       color: '#555',
+    },
+    modalContainer: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      padding: 20,
+    },
+    searchInput: {
+      width: '100%',
+      padding: 10,
+      marginVertical: 10,
+      borderRadius: 10,
+      backgroundColor: theme.colors.input,
+      color: theme.colors.textColor,
+    },
+    closeButton: {
+      backgroundColor: '#FFCC00',
+      padding: 15,
+      borderRadius: 10,
+      alignItems: 'center',
+      marginVertical: 10,
+    },
+    closeButtonText: {
+      color: '#000',
+      fontWeight: 'bold',
+    },
+    companyInputText: {
+      color: theme.colors.textColor,
+    },
+    companyItemText: {
+      padding: 10,
+      borderBottomWidth: 1,
+      borderBottomColor: '#CCC',
+    },
+    dataResults: {
+      width: '100%',
+      padding: 10,
+      color: theme.colors.textColor,
+      borderWidth: 1,
+      borderColor: '#FFCC00',
+      borderRadius: 10,
+      fontSize: 16,
+      fontWeight: '500',
+    },
+    placeholderText: {
+      color: theme.colors.placeholder,
+    },
+    selectInput: {
+      width: '100%',
+      padding: 10,
+      marginVertical: 10,
+      borderRadius: 10,
+      backgroundColor: theme.colors.input,
+      fontSize: 20,
+      color: theme.colors.textColor,
     },
   });
 };

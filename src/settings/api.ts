@@ -116,8 +116,13 @@ export const getAllInvestment = async () => {
   }
 };
 
-export const getProjects = async () => {
-  const response = await api.get(HttpRoutes.project.getAll.url);
+export const getProjects = async (page: number = 1, query: string = '') => {
+  const response = await api.get(HttpRoutes.project.getAll.url, {
+    params: {
+      page,
+      search: query,
+    },
+  });
   return extractData(response);
 };
 
@@ -132,8 +137,13 @@ export const getSellers = async () => {
   return extractData(response);
 };
 
-export const getCompanies = async () => {
-  const response = await api.get(HttpRoutes.company.getAll.url);
+export const getCompanies = async (page: number = 1, query: string = '') => {
+  const response = await api.get(HttpRoutes.company.getAll.url, {
+    params: {
+      page,
+      search: query,
+    },
+  });
   return extractData(response);
 };
 
@@ -246,6 +256,19 @@ export const createInvestor = async (investorData: any) => {
     return response.data;
   } catch (error: any) {
     console.error('Erro ao criar investidor:', error.response.data);
+    throw error;
+  }
+};
+
+export const patchUser = async (id: string, userData: any) => {
+  try {
+    const response = await api.patch(
+      HttpRoutes.user.patchUser.url.replace(':id', id),
+      userData,
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Erro ao atualizar usuário:', error.response.data);
     throw error;
   }
 };
