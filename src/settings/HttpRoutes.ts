@@ -29,6 +29,10 @@ export const HttpRoutes = {
       url: 'user/seller/:id',
       type: 'get',
     },
+    patchUser: {
+      url: 'user/:id',
+      type: 'patch',
+    },
   },
   project: {
     getAll: {

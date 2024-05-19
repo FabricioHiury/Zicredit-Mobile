@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
     width: 100,
     height: 40,
     resizeMode: 'contain',
-    marginBottom: 20, // Adicionado para dar um espaçamento abaixo da logo
+    marginBottom: 20,
   },
   input: {
     width: '100%',
@@ -29,8 +29,30 @@ export const styles = StyleSheet.create({
     color: '#FFFFFF80',
     borderRadius: 10,
     paddingHorizontal: 30,
-    paddingVertical: 20,
     fontSize: 16,
+    height: 60,
+  },
+  passwordContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    margin: 10,
+    borderWidth: 1,
+    borderColor: '#121212',
+    backgroundColor: '#121212',
+    borderRadius: 10,
+    height: 60,
+  },
+  passwordInput: {
+    flex: 1,
+    paddingHorizontal: 30,
+    fontSize: 16,
+    color: '#FFFFFF80',
+    height: '100%',
+  },
+  icon: {
+    position: 'absolute',
+    right: 10,
   },
   button: {
     backgroundColor: '#FFCC00',

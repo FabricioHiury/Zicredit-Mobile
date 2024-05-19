@@ -1,61 +1,70 @@
-import {useTheme} from '../../assets/themes/ThemeContext';
 import {StyleSheet} from 'react-native';
+import {useTheme} from '../../assets/themes/ThemeContext';
 
 export const useStyles = () => {
   const {theme} = useTheme();
   return StyleSheet.create({
-    scrollViewContent: {
-      flexGrow: 1,
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+    },
+    profileContainer: {
+      padding: 20,
+      borderWidth: 1,
+      borderColor: '#FFCC00',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 10,
+    },
+    labelText: {
+      fontSize: 20,
+      color: theme.colors.textColor,
+      marginBottom: 10,
+      fontWeight: '400',
+    },
+    editButton: {
+      backgroundColor: '#FFCC00',
+      padding: 10,
+      borderRadius: 5,
+      marginVertical: 10,
+      marginHorizontal: 5,
+      alignItems: 'center',
+    },
+    editButtonText: {
+      color: theme.colors.input,
+      fontWeight: 'bold',
+      fontSize: 16,
+    },
+    errorText: {
+      color: 'red',
+      fontSize: 16,
+    },
+    modalContainer: {
+      flex: 1,
       justifyContent: 'center',
       alignItems: 'center',
       backgroundColor: theme.colors.background,
-    },
-    container: {
-      flex: 1,
-      alignItems: 'center',
-      backgroundColor: theme.colors.background,
-      gap: 10,
-    },
-    profileContainer: {
-      width: '90%',
       padding: 20,
-      borderRadius: 10,
-      borderColor: '#FFCC00',
-      borderWidth: 1,
-      alignItems: 'center',
     },
-    itemTextPrimary: {
+    modalTitle: {
       fontSize: 20,
-      fontWeight: '700',
+      fontWeight: 'bold',
+      marginBottom: 20,
       color: theme.colors.textColor,
     },
-    itemTextSecondary: {
-      fontSize: 16,
-      fontWeight: '400',
-      color: theme.colors.textColor,
-    },
-    errorText: {
-      fontSize: 18,
-      color: theme.colors.textColor,
-      textAlign: 'center',
-      marginVertical: 16,
-    },
-    labelText: {
-      fontSize: 18,
-      fontWeight: '600',
-      color: theme.colors.textColor,
-      marginBottom: 8,
-    },
-    editButton: {
-      marginTop: 20,
-      backgroundColor: '#FFCC00',
+    input: {
+      width: '100%',
       padding: 10,
+      marginVertical: 10,
       borderRadius: 10,
-    },
-    editButtonText: {
+      backgroundColor: theme.colors.input,
+      color: theme.colors.textColor,
       fontSize: 16,
-      fontWeight: '600',
-      color: '#121212',
+    },
+    buttonContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginVertical: 10,
     },
   });
 };

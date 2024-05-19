@@ -1,22 +1,23 @@
 import React, {useState} from 'react';
 import {
   View,
-  TextInput,
   TouchableOpacity,
   Text,
   Alert,
   Image,
+  TextInput,
 } from 'react-native';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useAuth} from '../../../context/AuthContext/AuthContext';
 import {styles} from './styles';
 import {HttpRoutes} from '../../../settings/HttpRoutes';
-import Header from '../../../components/Header';
 import Logo from '../../../assets/icons/Logo.png';
 
 const LoginScreen: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const {signIn} = useAuth();
 
   const handleLogin = async () => {
@@ -61,15 +62,28 @@ const LoginScreen: React.FC = () => {
           value={identifier}
           onChangeText={setIdentifier}
           autoCapitalize="none"
+          keyboardType="numeric"
+          maxLength={14}
         />
-        <TextInput
-          style={styles.input}
-          placeholder="Digite sua senha"
-          placeholderTextColor="#FFFFFF80"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Digite sua senha"
+            placeholderTextColor="#FFFFFF80"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!passwordVisible}
+          />
+          <TouchableOpacity
+            onPress={() => setPasswordVisible(!passwordVisible)}
+            style={styles.icon}>
+            <Icon
+              name={passwordVisible ? 'visibility' : 'visibility-off'}
+              size={20}
+              color="#FFCC00"
+            />
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
