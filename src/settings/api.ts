@@ -272,3 +272,49 @@ export const patchUser = async (id: string, userData: any) => {
     throw error;
   }
 };
+
+export const getTotalInvestedByCompany = async (companyId: string) => {
+  try {
+    const response = await api.post(
+      HttpRoutes.investment.getTotalInvestmentByCompanyId.url.replace(
+        ':companyId',
+        companyId,
+      ),
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching total invested by company:', error);
+    throw error;
+  }
+};
+
+export const getInvestorsCountByCompanyId = async (companyId: string) => {
+  try {
+    const response = await api.get(
+      HttpRoutes.investment.getInvestorsCountByCompanyId.url.replace(
+        ':companyId',
+        companyId,
+      ),
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching investors count by company:', error);
+    throw error;
+  }
+};
+
+export const getActiveProjectsCountByCompanyId = async (companyId: string) => {
+  try {
+    const response = await api.get(
+      HttpRoutes.project.getActiveProjectsCountByCompanyId.url.replace(
+        ':companyId',
+        companyId,
+      ),
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching active projects count by company:', error);
+    throw error;
+  }
+};
