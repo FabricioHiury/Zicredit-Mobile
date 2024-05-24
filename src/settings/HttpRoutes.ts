@@ -51,6 +51,10 @@ export const HttpRoutes = {
       url: 'projects',
       type: 'post',
     },
+    getProjectsByCompanyId: {
+      url: '/projects/projects-by-company/:companyId',
+      type: 'get',
+    },
   },
   investment: {
     getAll: {
@@ -83,10 +87,6 @@ export const HttpRoutes = {
     },
     getInvestorsByCompanyId: {
       url: '/investment/investors-by-company/:companyId',
-      type: 'get',
-    },
-    getProjectsByCompanyId: {
-      url: '/investment/projects-by-company/:companyId',
       type: 'get',
     },
   },

@@ -309,7 +309,7 @@ export const getProjectsByCompanyId = async (
   paginationParams = {},
 ) => {
   try {
-    const url = HttpRoutes.investment.getProjectsByCompanyId.url.replace(
+    const url = HttpRoutes.project.getProjectsByCompanyId.url.replace(
       ':companyId',
       companyId,
     );
