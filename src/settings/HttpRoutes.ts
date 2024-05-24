@@ -66,7 +66,7 @@ export const HttpRoutes = {
       type: 'post',
     },
     getTotalInvestmentByCompanyId: {
-      url: '/investment/total-by-company:companyId',
+      url: '/investment/total-by-company/:companyId',
       type: 'post',
     },
     getInvestorsCountByCompanyId: {
@@ -79,6 +79,14 @@ export const HttpRoutes = {
     },
     getByUserId: {
       url: 'investment/investor/:id',
+      type: 'get',
+    },
+    getInvestorsByCompanyId: {
+      url: '/investment/investors-by-company/:companyId',
+      type: 'get',
+    },
+    getProjectsByCompanyId: {
+      url: '/investment/projects-by-company/:companyId',
       type: 'get',
     },
   },

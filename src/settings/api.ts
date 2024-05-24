@@ -275,16 +275,48 @@ export const patchUser = async (id: string, userData: any) => {
 
 export const getTotalInvestedByCompany = async (companyId: string) => {
   try {
-    const response = await api.post(
-      HttpRoutes.investment.getTotalInvestmentByCompanyId.url.replace(
-        ':companyId',
-        companyId,
-      ),
+    const url = HttpRoutes.investment.getTotalInvestmentByCompanyId.url.replace(
+      ':companyId',
+      companyId,
     );
-    console.log(response.data);
-    return response.data;
+    const response = await api.post(url);
+    return response.data.totalInvested;
   } catch (error) {
     console.error('Error fetching total invested by company:', error);
+    throw error;
+  }
+};
+
+export const getInvestorsByCompanyId = async (
+  companyId: string,
+  paginationParams = {},
+) => {
+  try {
+    const url = HttpRoutes.investment.getInvestorsByCompanyId.url.replace(
+      ':companyId',
+      companyId,
+    );
+    const response = await api.get(url, {params: paginationParams});
+    return response.data.metadata.data; 
+  } catch (error) {
+    console.error('Error fetching investors by company:', error);
+    throw error;
+  }
+};
+
+export const getProjectsByCompanyId = async (
+  companyId: string,
+  paginationParams = {},
+) => {
+  try {
+    const url = HttpRoutes.investment.getProjectsByCompanyId.url.replace(
+      ':companyId',
+      companyId,
+    );
+    const response = await api.get(url, {params: paginationParams});
+    return response.data.metadata.data; 
+  } catch (error) {
+    console.error('Error fetching projects by company:', error);
     throw error;
   }
 };

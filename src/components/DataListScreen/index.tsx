@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import {useStyles} from './styles';
 import {
-  getProjects,
-  getInvestments,
+  getProjectsByCompanyId,
+  getInvestorsByCompanyId,
   getSellers,
   getCompanies,
 } from '../../settings/api';
@@ -20,8 +20,8 @@ import Header from '../Header';
 import {useNavigation} from '@react-navigation/native';
 
 const fetchDataFunctionMap = {
-  projects: getProjects,
-  investments: getInvestments,
+  projects: getProjectsByCompanyId,
+  investments: getInvestorsByCompanyId,
   sellers: getSellers,
   companies: getCompanies,
 };
@@ -50,9 +50,9 @@ const renderItem = (item: any, type: string, styles: any, navigation: any) => {
       secondaryText = item.location;
       break;
     case 'investments':
-      primaryText = item.user.name;
-      secondaryText = item.user.cpf;
-      id = item.user.id; 
+      primaryText = item.name;
+      secondaryText = item.cpf;
+      id = item.id;
       itemType = 'user';
       break;
     case 'sellers':
@@ -82,16 +82,32 @@ export function DataListScreen({route}: DataListScreenProps) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(false);
-  const {userRole} = useAuth();
+  const {userRole, companyId} = useAuth();
   const navigation = useNavigation();
 
   const fetchData = async () => {
     setLoading(true);
     setRefreshing(true);
     try {
-      const fetchFunction = fetchDataFunctionMap[type];
+      let fetchFunction;
+
+      console.log('UserRole:', userRole);
+      console.log('CompanyId:', companyId);
+
+      if (
+        userRole === 'COMPANY' &&
+        (type === 'projects' || type === 'investments')
+      ) {
+        fetchFunction =
+          type === 'projects'
+            ? getProjectsByCompanyId
+            : getInvestorsByCompanyId;
+      } else {
+        fetchFunction = fetchDataFunctionMap[type];
+      }
+
       if (fetchFunction) {
-        const result = await fetchFunction();
+        const result = await fetchFunction(companyId);
         setData(Array.isArray(result) ? result : []);
         setError(false);
       } else {
