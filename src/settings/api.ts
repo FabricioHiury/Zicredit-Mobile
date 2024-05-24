@@ -272,3 +272,81 @@ export const patchUser = async (id: string, userData: any) => {
     throw error;
   }
 };
+
+export const getTotalInvestedByCompany = async (companyId: string) => {
+  try {
+    const url = HttpRoutes.investment.getTotalInvestmentByCompanyId.url.replace(
+      ':companyId',
+      companyId,
+    );
+    const response = await api.post(url);
+    return response.data.totalInvested;
+  } catch (error) {
+    console.error('Error fetching total invested by company:', error);
+    throw error;
+  }
+};
+
+export const getInvestorsByCompanyId = async (
+  companyId: string,
+  paginationParams = {},
+) => {
+  try {
+    const url = HttpRoutes.investment.getInvestorsByCompanyId.url.replace(
+      ':companyId',
+      companyId,
+    );
+    const response = await api.get(url, {params: paginationParams});
+    return response.data.metadata.data; 
+  } catch (error) {
+    console.error('Error fetching investors by company:', error);
+    throw error;
+  }
+};
+
+export const getProjectsByCompanyId = async (
+  companyId: string,
+  paginationParams = {},
+) => {
+  try {
+    const url = HttpRoutes.project.getProjectsByCompanyId.url.replace(
+      ':companyId',
+      companyId,
+    );
+    const response = await api.get(url, {params: paginationParams});
+    return response.data.metadata.data; 
+  } catch (error) {
+    console.error('Error fetching projects by company:', error);
+    throw error;
+  }
+};
+
+export const getInvestorsCountByCompanyId = async (companyId: string) => {
+  try {
+    const response = await api.get(
+      HttpRoutes.investment.getInvestorsCountByCompanyId.url.replace(
+        ':companyId',
+        companyId,
+      ),
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching investors count by company:', error);
+    throw error;
+  }
+};
+
+export const getActiveProjectsCountByCompanyId = async (companyId: string) => {
+  try {
+    const response = await api.get(
+      HttpRoutes.project.getActiveProjectsCountByCompanyId.url.replace(
+        ':companyId',
+        companyId,
+      ),
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching active projects count by company:', error);
+    throw error;
+  }
+};

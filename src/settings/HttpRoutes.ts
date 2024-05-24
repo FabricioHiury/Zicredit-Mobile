@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.11.6:80/';
+const baseUrl = 'http://192.168.1.4:80/';
 
 export const HttpRoutes = {
   route: baseUrl,
@@ -43,9 +43,17 @@ export const HttpRoutes = {
       url: 'projects/:id',
       type: 'get',
     },
+    getActiveProjectsCountByCompanyId: {
+      url: 'projects/active-projects-count/:companyId',
+      type: 'get',
+    },
     createProject: {
       url: 'projects',
       type: 'post',
+    },
+    getProjectsByCompanyId: {
+      url: '/projects/projects-by-company/:companyId',
+      type: 'get',
     },
   },
   investment: {
@@ -61,12 +69,24 @@ export const HttpRoutes = {
       url: 'investment/total-invested-overall',
       type: 'post',
     },
+    getTotalInvestmentByCompanyId: {
+      url: '/investment/total-by-company/:companyId',
+      type: 'post',
+    },
+    getInvestorsCountByCompanyId: {
+      url: 'investment/investors-count/:companyId',
+      type: 'get',
+    },
     createInvestor: {
       url: 'investment',
       type: 'post',
     },
     getByUserId: {
       url: 'investment/investor/:id',
+      type: 'get',
+    },
+    getInvestorsByCompanyId: {
+      url: '/investment/investors-by-company/:companyId',
       type: 'get',
     },
   },

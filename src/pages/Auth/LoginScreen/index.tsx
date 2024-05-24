@@ -30,6 +30,7 @@ const LoginScreen: React.FC = () => {
           response.data.access_token,
           response.data.user.id,
           response.data.user.role,
+          response.data.user.companyId
         );
       } else {
         console.error(
@@ -78,7 +79,7 @@ const LoginScreen: React.FC = () => {
             onPress={() => setPasswordVisible(!passwordVisible)}
             style={styles.icon}>
             <Icon
-              name={passwordVisible ? 'visibility' : 'visibility-off'}
+              name={passwordVisible ? 'visibility-off' : 'visibility'}
               size={20}
               color="#FFCC00"
             />
