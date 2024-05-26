@@ -1,6 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, ActivityIndicator, ScrollView} from 'react-native';
-import {RouteProp, useRoute} from '@react-navigation/native';
+import React, {useEffect, useState, useCallback} from 'react';
+import {
+  View,
+  Text,
+  ActivityIndicator,
+  ScrollView,
+  BackHandler,
+} from 'react-native';
+import {
+  RouteProp,
+  useRoute,
+  useNavigation,
+  useFocusEffect,
+} from '@react-navigation/native';
 import {useStyles} from './styles';
 import {
   getCompanyById,
@@ -19,6 +30,7 @@ const DetailsScreen: React.FC = () => {
   const styles = useStyles();
   const {userRole} = useAuth();
   const route = useRoute<DetailsScreenRouteProp>();
+  const navigation = useNavigation();
   const {id, type, data: passedData} = route.params;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
@@ -63,6 +75,22 @@ const DetailsScreen: React.FC = () => {
 
     fetchData();
   }, [id, type, userRole, passedData]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const onBackPress = () => {
+        if (userRole === 'SELLER') {
+          return true; // Impede a navegação
+        }
+        return false; // Permite a navegação
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [userRole]),
+  );
 
   if (loading) {
     return (
