@@ -6,6 +6,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  ActivityIndicator,
 } from 'react-native';
 import {useStyles} from './styles';
 import {
@@ -35,10 +36,11 @@ export function HomeScreen({navigation}: HomeScreenProps) {
   });
   const [error, setError] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const {userRole, companyId} = useAuth();
-  console.log('company: ', companyId);
+  const {userRole, companyId, loading: authLoading} = useAuth();
 
   const fetchData = async () => {
+    if (!companyId && userRole === 'COMPANY') return;
+
     setRefreshing(true);
     try {
       if (userRole === 'COMPANY' && companyId) {
@@ -87,8 +89,18 @@ export function HomeScreen({navigation}: HomeScreenProps) {
   };
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    if (!authLoading && (userRole !== 'COMPANY' || companyId)) {
+      fetchData();
+    }
+  }, [authLoading, companyId, userRole]);
+
+  if (authLoading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
   const handleNavigation = (
     type: 'projects' | 'investments' | 'sellers' | 'companies',

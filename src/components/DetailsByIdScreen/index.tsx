@@ -19,13 +19,19 @@ const DetailsScreen: React.FC = () => {
   const styles = useStyles();
   const {userRole} = useAuth();
   const route = useRoute<DetailsScreenRouteProp>();
-  const {id, type} = route.params;
+  const {id, type, data: passedData} = route.params;
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      if (userRole === 'COMPANY' && passedData) {
+        setData(passedData);
+        setLoading(false);
+        return;
+      }
+
       setLoading(true);
       try {
         let fetchFunction;
@@ -46,7 +52,7 @@ const DetailsScreen: React.FC = () => {
             throw new Error('Invalid type');
         }
         const data = await fetchFunction(id);
-        setData(data.response || data);
+        setData(data);
       } catch (err) {
         console.error('Error fetching data:', err);
         setError('Failed to load data');
@@ -56,7 +62,7 @@ const DetailsScreen: React.FC = () => {
     };
 
     fetchData();
-  }, [id, type]);
+  }, [id, type, userRole, passedData]);
 
   if (loading) {
     return (
@@ -83,19 +89,20 @@ const DetailsScreen: React.FC = () => {
           <Text style={styles.labelText}>Valor total do empreendimento</Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              ${data.totalValue?.toLocaleString('pt-BR')}
+              R$ {data.totalValue?.toLocaleString('pt-BR')}
             </Text>
           </View>
           <Text style={styles.labelText}>Valor total do investimento</Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              ${data.totalInvested?.toLocaleString('pt-BR')}
+              R$ {data.totalInvested?.toLocaleString('pt-BR')}
             </Text>
           </View>
           <Text style={styles.labelText}>Saldo de cotas disponíveis</Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              ${(data.totalValue - data.totalInvested)?.toLocaleString('pt-BR')}
+              R${' '}
+              {(data.totalValue - data.totalInvested)?.toLocaleString('pt-BR')}
             </Text>
           </View>
           <Text style={styles.labelText}>
@@ -103,7 +110,7 @@ const DetailsScreen: React.FC = () => {
           </Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              ${data.monthlyDistribution?.toLocaleString('pt-BR')}
+              R$ {data.monthlyDistribution?.toLocaleString('pt-BR')}
             </Text>
           </View>
         </View>
@@ -112,11 +119,9 @@ const DetailsScreen: React.FC = () => {
   };
 
   const renderInvestorDetails = () => {
-    const totalInvested = data?.totalInvested || 0;
-    const userName =
-      data?.investments && data?.investments.length > 0
-        ? data.investments[0].user.name
-        : 'Investidor';
+    if (!data) return null;
+    const {investments, totalInvested} = data.response || {};
+    const userName = data.name || 'Investidor';
 
     return (
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -125,31 +130,25 @@ const DetailsScreen: React.FC = () => {
           <Text style={styles.labelText}>Valor total investido</Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              ${totalInvested.toLocaleString('pt-BR')}
+              R$ {(totalInvested || 0).toLocaleString('pt-BR')}
             </Text>
           </View>
           <Text style={styles.labelText}>Captação por empreendimento</Text>
-          {data?.investments &&
-            data.investments.map(
-              (
-                investment: {project: {name: string}; amountInvested: number},
-                index: number,
-              ) => (
-                <View key={index} style={styles.highlightBox}>
-                  <Text style={styles.projectName}>
-                    {investment.project.name}
-                  </Text>
-                  <Text style={styles.projectValue}>
-                    R${investment.amountInvested.toLocaleString('pt-BR')} (
-                    {(
-                      (investment.amountInvested / totalInvested) *
-                      100
-                    ).toFixed(2)}
-                    %)
-                  </Text>
-                </View>
-              ),
-            )}
+          {investments &&
+            investments.map((investment, index) => (
+              <View key={index} style={styles.highlightBox}>
+                <Text style={styles.projectName}>
+                  {investment.project.name}
+                </Text>
+                <Text style={styles.projectValue}>
+                  R$ {investment.amountInvested.toLocaleString('pt-BR')} (
+                  {((investment.amountInvested / totalInvested) * 100).toFixed(
+                    2,
+                  )}
+                  %)
+                </Text>
+              </View>
+            ))}
         </View>
       </ScrollView>
     );
@@ -173,13 +172,13 @@ const DetailsScreen: React.FC = () => {
           <Text style={styles.labelText}>Valor total investido</Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              R$ {data.totalInvested.toLocaleString('pt-BR')}
+              R$ {data.totalInvested?.toLocaleString('pt-BR')}
             </Text>
           </View>
           <Text style={styles.labelText}>Saldo de cotas disponíveis</Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              R$ {data.totalRemaining.toLocaleString('pt-BR')}
+              R$ {data.totalRemaining?.toLocaleString('pt-BR')}
             </Text>
           </View>
           <Text style={styles.labelText}>
@@ -187,7 +186,7 @@ const DetailsScreen: React.FC = () => {
           </Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              R$ {data.totalYield.toLocaleString('pt-BR')}
+              R$ {data.totalYield?.toLocaleString('pt-BR')}
             </Text>
           </View>
         </View>
@@ -205,60 +204,64 @@ const DetailsScreen: React.FC = () => {
           <Text style={styles.labelText}>Total do investimento captado</Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              ${data.totalInvestment?.toLocaleString('pt-BR')}
+              R$ {data.totalInvestment?.toLocaleString('pt-BR')}
             </Text>
           </View>
           <Text style={styles.labelText}>Total da comissão recebida</Text>
           <View style={styles.highlightBox}>
             <Text style={styles.valueText}>
-              ${data.totalCommission?.toLocaleString('pt-BR')}
+              R$ {data.totalCommission?.toLocaleString('pt-BR')}
             </Text>
           </View>
           <Text style={styles.labelText}>Captação por empreendimento</Text>
           {data.projectInvestments &&
-            data.projectInvestments.map(
-              (
-                project: {projectName: string; amount: number},
-                index: number,
-              ) => (
-                <View key={index} style={styles.highlightBox}>
-                  <Text style={styles.projectName}>{project.projectName}</Text>
-                  <Text style={styles.projectValue}>
-                    R${project.amount.toLocaleString('pt-BR')}
-                  </Text>
-                </View>
-              ),
-            )}
+            data.projectInvestments.map((project, index) => (
+              <View key={index} style={styles.highlightBox}>
+                <Text style={styles.projectName}>{project.projectName}</Text>
+                <Text style={styles.projectValue}>
+                  R$ {project.amount.toLocaleString('pt-BR')}
+                </Text>
+              </View>
+            ))}
         </View>
       </ScrollView>
     );
   };
 
   const renderDefaultDetails = () => (
-    <View style={styles.detailsContainer}>
-      {data ? (
-        <>
-          <Text style={styles.labelText}>Nome: {data.name}</Text>
-          {type === 'companies' && (
-            <Text style={styles.labelText}>Endereço: {data.address}</Text>
-          )}
-          {type === 'sellers' && (
-            <>
-              <Text style={styles.labelText}>CPF: {data.cpf}</Text>
-              <Text style={styles.labelText}>Email: {data.email}</Text>
-              <Text style={styles.labelText}>Telefone: {data.phone}</Text>
-            </>
-          )}
-          {type === 'user' && (
-            <>
-              <Text>Hello World</Text>
-            </>
-          )}
-        </>
-      ) : (
-        <Text style={styles.errorText}>Nenhum dado disponível.</Text>
-      )}
-    </View>
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+      <View style={styles.detailsContainer}>
+        <Text style={styles.projectTitle}>{data.name}</Text>
+        <Text style={styles.labelText}>CPF</Text>
+        <View style={styles.highlightBox}>
+          <Text style={styles.addressText}>{data.cpf}</Text>
+        </View>
+        <Text style={styles.labelText}>Email</Text>
+        <View style={styles.highlightBox}>
+          <Text style={styles.addressText}>{data.email}</Text>
+        </View>
+        <Text style={styles.labelText}>Telefone</Text>
+        <View style={styles.highlightBox}>
+          <Text style={styles.addressText}>{data.phone}</Text>
+        </View>
+        <Text style={styles.labelText}>Valor total investido</Text>
+        <View style={styles.highlightBox}>
+          <Text style={styles.valueText}>
+            R$ {(data.totalInvested || 0).toLocaleString('pt-BR')}
+          </Text>
+        </View>
+        <Text style={styles.labelText}>Investimentos por empreendimento</Text>
+        {data.investments &&
+          data.investments.map((investment, index) => (
+            <View key={index} style={styles.highlightBox}>
+              <Text style={styles.projectName}>{investment.projectName}</Text>
+              <Text style={styles.projectValue}>
+                R$ {investment.amountInvested.toLocaleString('pt-BR')}
+              </Text>
+            </View>
+          ))}
+      </View>
+    </ScrollView>
   );
 
   return (
