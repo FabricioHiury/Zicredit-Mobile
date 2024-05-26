@@ -18,24 +18,26 @@ const Header: React.FC<HeaderProps> = ({isMenu, userRole}) => {
   const styles = useStyles();
   const {darkMode} = useTheme();
   const navigation = useNavigation();
-  const isFocused = useIsFocused(); // Hook to detect if the screen is focused
+  const isFocused = useIsFocused(); 
 
   useEffect(() => {
     if (!isFocused) {
-      setMenuVisible(false); // Close menu when the screen is not focused
+      setMenuVisible(false); 
     }
   }, [isFocused]);
 
   const handlePress = () => {
-    if (navigation.canGoBack()) {
+    if (navigation.canGoBack() && userRole !== 'SELLER') {
       navigation.goBack();
     } else {
       setMenuVisible(true);
     }
   };
 
-  const iconName = navigation.canGoBack() ? 'arrow-back-ios' : 'menu';
-  const iconStyle = navigation.canGoBack() ? styles.arrowIcon : {};
+  const iconName =
+    navigation.canGoBack() && userRole !== 'SELLER' ? 'arrow-back-ios' : 'menu';
+  const iconStyle =
+    navigation.canGoBack() && userRole !== 'SELLER' ? styles.arrowIcon : {};
 
   return (
     <View style={styles.headerContainer}>

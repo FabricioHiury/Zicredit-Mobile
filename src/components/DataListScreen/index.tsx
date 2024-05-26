@@ -11,19 +11,23 @@ import {
 import {useStyles} from './styles';
 import {
   getProjectsByCompanyId,
-  getInvestorsByCompanyId,
   getSellers,
   getCompanies,
+  getProjects,
+  getInvestments,
+  getInvestorsByCompanyAndUserId,
 } from '../../settings/api';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import Header from '../Header';
 import {useNavigation} from '@react-navigation/native';
 
 const fetchDataFunctionMap = {
-  projects: getProjectsByCompanyId,
-  investments: getInvestorsByCompanyId,
+  projects: getProjects,
+  investments: getInvestments,
   sellers: getSellers,
   companies: getCompanies,
+  projectsByCompany: getProjectsByCompanyId,
+  investmentsByCompany: getInvestorsByCompanyAndUserId,
 };
 
 type DataListScreenProps = {
@@ -34,41 +38,69 @@ type DataListScreenProps = {
   };
 };
 
-const renderItem = (item: any, type: string, styles: any, navigation: any) => {
+const renderItem = (
+  item: any,
+  type: string,
+  styles: any,
+  navigation: any,
+  userRole: string,
+) => {
   let primaryText = '';
   let secondaryText = '';
   let id = item.id;
   let itemType = type;
 
-  switch (type) {
-    case 'companies':
-      primaryText = item.name;
-      secondaryText = item.address;
-      break;
-    case 'projects':
-      primaryText = item.name;
-      secondaryText = item.location;
-      break;
-    case 'investments':
-      primaryText = item.name;
-      secondaryText = item.cpf;
-      id = item.id;
-      itemType = 'user';
-      break;
-    case 'sellers':
-      primaryText = item.name;
-      secondaryText = item.cpf;
-      break;
-    default:
-      primaryText = 'Unknown';
-      secondaryText = 'Unknown';
+  if (userRole === 'COMPANY') {
+    switch (type) {
+      case 'investments':
+        primaryText = item.name;
+        secondaryText = item.cpf;
+        break;
+      case 'projects':
+        primaryText = item.name;
+        secondaryText = item.location;
+        break;
+      default:
+        primaryText = 'Unknown';
+        secondaryText = 'Unknown';
+    }
+  } else {
+    switch (type) {
+      case 'companies':
+        primaryText = item.name;
+        secondaryText = item.address;
+        break;
+      case 'projects':
+        primaryText = item.name;
+        secondaryText = item.location;
+        break;
+      case 'investments':
+        primaryText = item.user?.name || 'Unknown Investor';
+        secondaryText = item.user?.cpf || 'No CPF';
+        id = item.userId;
+        itemType = 'user';
+        break;
+      case 'sellers':
+        primaryText = item.name;
+        secondaryText = item.cpf;
+        break;
+      default:
+        primaryText = 'Unknown';
+        secondaryText = 'Unknown';
+    }
   }
 
   return (
     <TouchableOpacity
       key={item.id}
       style={styles.itemContainer}
-      onPress={() => navigation.navigate('Details', {id, type: itemType})}>
+      onPress={() => {
+        if (userRole === 'COMPANY' && type === 'investments') {
+          navigation.navigate('Details', {id, type: itemType, data: item});
+        } else {
+          navigation.navigate('Details', {id, type: itemType});
+        }
+      }}>
       <Text style={styles.itemTextPrimary}>{primaryText}</Text>
       <Text style={styles.itemTextSecondary}>{secondaryText}</Text>
     </TouchableOpacity>
@@ -94,20 +126,20 @@ export function DataListScreen({route}: DataListScreenProps) {
       console.log('UserRole:', userRole);
       console.log('CompanyId:', companyId);
 
-      if (
-        userRole === 'COMPANY' &&
-        (type === 'projects' || type === 'investments')
-      ) {
+      if (userRole === 'COMPANY') {
         fetchFunction =
           type === 'projects'
-            ? getProjectsByCompanyId
-            : getInvestorsByCompanyId;
+            ? fetchDataFunctionMap.projectsByCompany
+            : fetchDataFunctionMap.investmentsByCompany;
       } else {
         fetchFunction = fetchDataFunctionMap[type];
       }
 
       if (fetchFunction) {
-        const result = await fetchFunction(companyId);
+        const result =
+          userRole === 'COMPANY'
+            ? await fetchFunction(companyId)
+            : await fetchFunction();
         setData(Array.isArray(result) ? result : []);
         setError(false);
       } else {
@@ -146,7 +178,7 @@ export function DataListScreen({route}: DataListScreenProps) {
         ) : data.length === 0 ? (
           <Text style={styles.errorText}>Nenhum dado disponível.</Text>
         ) : (
-          data.map(item => renderItem(item, type, styles, navigation))
+          data.map(item => renderItem(item, type, styles, navigation, userRole))
         )}
       </View>
     </ScrollView>

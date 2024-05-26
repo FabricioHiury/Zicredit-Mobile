@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   TouchableOpacity,
@@ -13,12 +13,21 @@ import {useAuth} from '../../../context/AuthContext/AuthContext';
 import {styles} from './styles';
 import {HttpRoutes} from '../../../settings/HttpRoutes';
 import Logo from '../../../assets/icons/Logo.png';
+import {useNavigation} from '@react-navigation/native';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import {RootStackParamList} from '../../../types/navigation';
+
+type LoginScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'Home'
+>;
 
 const LoginScreen: React.FC = () => {
   const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const {signIn} = useAuth();
+  const navigation = useNavigation<LoginScreenNavigationProp>();
 
   const handleLogin = async () => {
     try {
@@ -26,12 +35,16 @@ const LoginScreen: React.FC = () => {
       const response = await axios.post(loginUrl, {identifier, password});
 
       if (response.data && response.data.access_token && response.data.user) {
-        signIn(
-          response.data.access_token,
-          response.data.user.id,
-          response.data.user.role,
-          response.data.user.companyId
-        );
+        const {access_token, user} = response.data;
+        const {id, role, companyId} = user;
+
+        await signIn(access_token, id, role, companyId);
+
+        if (role === 'SELLER') {
+          navigation.navigate('Details', {type: 'sellers', id: id});
+        } else {
+          navigation.navigate('Home');
+        }
       } else {
         console.error(
           'AccessToken, UserID, or UserRole not found in response',

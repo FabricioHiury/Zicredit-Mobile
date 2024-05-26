@@ -63,6 +63,8 @@ const extractTotal = (response: any) => {
 const extractData = (response: any) => {
   if (response?.data?.metadata?.data !== undefined) {
     return response.data.metadata.data;
+  } else if (response?.data !== undefined) {
+    return response.data;
   } else {
     return [];
   }
@@ -128,7 +130,7 @@ export const getProjects = async (page: number = 1, query: string = '') => {
 
 export const getInvestments = async () => {
   const response = await api.get(HttpRoutes.investment.getAll.url);
-  console.log(response.data.metadata);
+  console.log('getInvestments', extractData(response));
   return extractData(response);
 };
 
@@ -191,10 +193,12 @@ export const getInvestorById = async (id: string) => {
     const response = await api.get(
       HttpRoutes.investment.getByUserId.url.replace(':id', id),
     );
+    console.log(id);
     console.log(response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching investor data:', error);
+    throw error;
   }
 };
 
@@ -280,26 +284,32 @@ export const getTotalInvestedByCompany = async (companyId: string) => {
       companyId,
     );
     const response = await api.post(url);
+    console.log(response.data);
     return response.data.totalInvested;
   } catch (error) {
-    console.error('Error fetching total invested by company:', error);
+    console.error('Error message:', error);
     throw error;
   }
 };
 
-export const getInvestorsByCompanyId = async (
+export const getInvestorsByCompanyAndUserId = async (
   companyId: string,
+  userId: string | null,
   paginationParams = {},
 ) => {
   try {
-    const url = HttpRoutes.investment.getInvestorsByCompanyId.url.replace(
-      ':companyId',
-      companyId,
-    );
-    const response = await api.get(url, {params: paginationParams});
-    return response.data.metadata.data; 
+    const url =
+      HttpRoutes.investment.getInvestorsByCompanyId.url.replace(
+        ':companyId',
+        companyId,
+      );
+    const response = await api.get(url, {
+      params: {...paginationParams, userId},
+    });
+    console.log('comp: ', response.data.metadata.data);
+    return response.data.metadata.data;
   } catch (error) {
-    console.error('Error fetching investors by company:', error);
+    console.error('Error message:', error);
     throw error;
   }
 };
@@ -314,9 +324,10 @@ export const getProjectsByCompanyId = async (
       companyId,
     );
     const response = await api.get(url, {params: paginationParams});
-    return response.data.metadata.data; 
+    console.log('companyID: ', response.data.metadata.data);
+    return response.data.metadata.data;
   } catch (error) {
-    console.error('Error fetching projects by company:', error);
+    console.error('Error message:', error);
     throw error;
   }
 };
