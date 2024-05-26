@@ -79,7 +79,7 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
       toggle: true,
     },
     {
-      title: 'Sair do aplicativo',
+      title: 'Sair',
       icon: 'logout',
       roles: ['ZICREDIT', 'SELLER', 'COMPANY', 'INVESTOR'],
       action: handleSignOut,
@@ -122,7 +122,7 @@ const Menu: React.FC<MenuProps> = ({isVisible, onClose, userRole}) => {
           </TouchableOpacity>
         </View>
         {filteredMenuItems.map((item, index) =>
-          item.title !== 'Sair do aplicativo' ? (
+          item.title !== 'Sair' ? (
             <TouchableOpacity
               key={index}
               style={styles.menuItem}
