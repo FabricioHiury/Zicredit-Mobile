@@ -18,6 +18,7 @@ import {
   getTotalInvestedByCompany,
   getInvestorsCountByCompanyId,
   getActiveProjectsCountByCompanyId,
+  getInvestorById,
 } from '../../settings/api';
 import Header from '../../components/Header';
 import {useAuth} from '../../context/AuthContext/AuthContext';
@@ -25,7 +26,7 @@ import {HomeScreenProps} from '../../types/navigation';
 
 export function HomeScreen({navigation}: HomeScreenProps) {
   const styles = useStyles();
-  const [data, setData] = useState({
+  const [data, setData] = useState<any>({
     projects: 0,
     investments: 0,
     sellers: 0,
@@ -36,10 +37,10 @@ export function HomeScreen({navigation}: HomeScreenProps) {
   });
   const [error, setError] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const {userRole, companyId, loading: authLoading} = useAuth();
+  const {userRole, companyId, userId, loading: authLoading} = useAuth();
 
   const fetchData = async () => {
-    if (!companyId && userRole === 'COMPANY') return;
+    if (!userRole || (!companyId && userRole === 'COMPANY') || !userId) return;
 
     setRefreshing(true);
     try {
@@ -51,13 +52,20 @@ export function HomeScreen({navigation}: HomeScreenProps) {
         );
 
         setData({
-          totalInvested: totalInvested,
+          totalInvested: totalInvested || 0,
           totalYield: 0,
-          projects: companyProjects.projectsCount,
+          projects: companyProjects.projectsCount || 0,
           investments: 0,
           sellers: 0,
           companies: 0,
-          investors: companyInvestors.investorsCount,
+          investors: companyInvestors.investorsCount || 0,
+        });
+      } else if (userRole === 'INVESTOR' && userId) {
+        const investorData = await getInvestorById(userId);
+        setData({
+          totalInvested: investorData.response.totalInvested || 0,
+          totalYield: investorData.response.totalMonthlyYield || 0,
+          investments: investorData.response.investments || [],
         });
       } else {
         const projectsTotal = await getTotalProjects();
@@ -67,12 +75,12 @@ export function HomeScreen({navigation}: HomeScreenProps) {
         const {totalInvested, totalYield} = await getAllInvestment();
 
         setData({
-          totalInvested: totalInvested,
-          totalYield: totalYield,
-          projects: projectsTotal,
-          investments: investmentsTotal,
-          sellers: sellersTotal,
-          companies: companiesTotal,
+          totalInvested: totalInvested || 0,
+          totalYield: totalYield || 0,
+          projects: projectsTotal || 0,
+          investments: investmentsTotal || 0,
+          sellers: sellersTotal || 0,
+          companies: companiesTotal || 0,
           investors: 0,
         });
       }
@@ -89,12 +97,12 @@ export function HomeScreen({navigation}: HomeScreenProps) {
   };
 
   useEffect(() => {
-    if (!authLoading && (userRole !== 'COMPANY' || companyId)) {
+    if (!authLoading && userRole) {
       fetchData();
     }
-  }, [authLoading, companyId, userRole]);
+  }, [authLoading, companyId, userRole, userId]);
 
-  if (authLoading) {
+  if (authLoading || !userRole) {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" />
@@ -106,6 +114,10 @@ export function HomeScreen({navigation}: HomeScreenProps) {
     type: 'projects' | 'investments' | 'sellers' | 'companies',
   ) => {
     navigation.navigate('DataList', {type});
+  };
+
+  const handleProjectNavigation = (projectId: string) => {
+    navigation.navigate('Details', {id: projectId, type: 'projects'});
   };
 
   return (
@@ -120,12 +132,70 @@ export function HomeScreen({navigation}: HomeScreenProps) {
           <Text style={styles.labelText}>
             Não foi possível carregar os dados.
           </Text>
+        ) : userRole === 'INVESTOR' ? (
+          <>
+            <Text style={styles.labelText}>Valor Total Investido</Text>
+            <View style={styles.highlightBox}>
+              <Text style={styles.valueText}>
+                R${' '}
+                {data.totalInvested?.toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) || '0,00'}
+              </Text>
+            </View>
+            <Text style={styles.labelText}>Estimativa da retirada mensal</Text>
+            <View style={styles.highlightBox}>
+              <Text style={styles.valueText}>
+                R${' '}
+                {data.totalYield?.toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) || '0,00'}
+              </Text>
+            </View>
+            <Text style={styles.labelText}>
+              Investimentos por empreendimento
+            </Text>
+            {Array.isArray(data.investments) && data.investments.length > 0 ? (
+              data.investments.map((investment: any, index: number) => (
+                <TouchableOpacity
+                  key={index}
+                  style={styles.highlightBox}
+                  onPress={() => handleProjectNavigation(investment.projectId)}>
+                  <Text style={styles.projectName}>
+                    {investment.project.name}
+                  </Text>
+                  <View style={styles.investmentRow}>
+                    <Text style={styles.projectValue}>
+                      R${' '}
+                      {investment.amountInvested?.toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      }) || '0,00'}
+                    </Text>
+                    <Text style={styles.percentageText}>
+                      ({investment.percentageOfTotal?.toFixed(2) || '0.00'}%)
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.labelText}>
+                Nenhum investimento encontrado.
+              </Text>
+            )}
+          </>
         ) : (
           <>
             <Text style={styles.labelText}>Total Captado</Text>
             <View style={styles.fullWidthBox}>
               <Text style={styles.valueText}>
-                R$ {data.totalInvested.toLocaleString('pt-BR')}
+                R${' '}
+                {data.totalInvested?.toLocaleString('pt-BR', {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                }) || '0,00'}
               </Text>
             </View>
             {userRole !== 'COMPANY' && (
@@ -135,7 +205,11 @@ export function HomeScreen({navigation}: HomeScreenProps) {
                 </Text>
                 <View style={styles.fullWidthBox}>
                   <Text style={styles.valueText}>
-                    R$ {data.totalYield.toLocaleString('pt-BR')}
+                    R${' '}
+                    {data.totalYield?.toLocaleString('pt-BR', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    }) || '0,00'}
                   </Text>
                 </View>
               </View>
@@ -150,7 +224,7 @@ export function HomeScreen({navigation}: HomeScreenProps) {
                       Empreendimentos Cadastrados
                     </Text>
                     <View style={styles.gridItem}>
-                      <Text style={styles.valueText}>{data.projects}</Text>
+                      <Text style={styles.valueText}>{data.projects || 0}</Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -160,7 +234,9 @@ export function HomeScreen({navigation}: HomeScreenProps) {
                       Investidores Cadastrados
                     </Text>
                     <View style={styles.gridItem}>
-                      <Text style={styles.valueText}>{data.investors}</Text>
+                      <Text style={styles.valueText}>
+                        {data.investors || 0}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                 </>
@@ -173,7 +249,9 @@ export function HomeScreen({navigation}: HomeScreenProps) {
                       Construtoras Cadastradas
                     </Text>
                     <View style={styles.gridItem}>
-                      <Text style={styles.valueText}>{data.companies}</Text>
+                      <Text style={styles.valueText}>
+                        {data.companies || 0}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -181,7 +259,7 @@ export function HomeScreen({navigation}: HomeScreenProps) {
                     onPress={() => handleNavigation('sellers')}>
                     <Text style={styles.labelText}>Vendedores Cadastrados</Text>
                     <View style={styles.gridItem}>
-                      <Text style={styles.valueText}>{data.sellers}</Text>
+                      <Text style={styles.valueText}>{data.sellers || 0}</Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -191,7 +269,9 @@ export function HomeScreen({navigation}: HomeScreenProps) {
                       Investidores Cadastrados
                     </Text>
                     <View style={styles.gridItem}>
-                      <Text style={styles.valueText}>{data.investments}</Text>
+                      <Text style={styles.valueText}>
+                        {data.investments || 0}
+                      </Text>
                     </View>
                   </TouchableOpacity>
                   <TouchableOpacity
@@ -201,7 +281,7 @@ export function HomeScreen({navigation}: HomeScreenProps) {
                       Empreendimentos Cadastrados
                     </Text>
                     <View style={styles.gridItem}>
-                      <Text style={styles.valueText}>{data.projects}</Text>
+                      <Text style={styles.valueText}>{data.projects || 0}</Text>
                     </View>
                   </TouchableOpacity>
                 </>

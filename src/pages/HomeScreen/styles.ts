@@ -1,4 +1,4 @@
-import { useTheme } from "../../assets/themes/ThemeContext";
+import {useTheme} from '../../assets/themes/ThemeContext';
 import {StyleSheet} from 'react-native';
 
 export const useStyles = () => {
@@ -66,6 +66,26 @@ export const useStyles = () => {
     gridItemContainer: {
       width: '45%',
       marginVertical: 5,
+    },
+    projectName: {
+      color: theme.colors.textColor,
+      fontSize: 18,
+      fontWeight: 'bold',
+    },
+    projectValue: {
+      color: '#ffcc00',
+      fontSize: 20,
+      fontWeight: 'bold',
+    },
+    investmentRow: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+    },
+    percentageText: {
+      color: '#FFCC00',
+      fontSize: 16,
+      marginLeft: 10,
     },
   });
 };
