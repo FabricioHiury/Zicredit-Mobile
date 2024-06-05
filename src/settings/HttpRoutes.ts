@@ -1,4 +1,4 @@
-const baseUrl = 'http://192.168.11.4:80/';
+const baseUrl = 'http://34.151.197.60:80/';
 
 export const HttpRoutes = {
   route: baseUrl,

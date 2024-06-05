@@ -245,6 +245,17 @@ const RegisterForm = <T extends keyof FormState>({
     fetchProjects(projectPage);
   }, [projectPage]);
 
+  const cleanCurrencyValue = (value: string) => {
+    return value.replace(/[^\d]/g, '');
+  };
+
+  const handleProjectChange = (
+    name: keyof FormState['project'],
+    value: string,
+  ) => {
+    setFormData({...formData, [name]: value});
+  };
+
   const handleChange = (name: keyof FormState[T], value: string) => {
     setFormData({...formData, [name]: value});
   };
@@ -268,8 +279,17 @@ const RegisterForm = <T extends keyof FormState>({
     setLoading(true);
     try {
       const endpoint = endpoints[type];
-      await endpoint(formData);
-      Alert.alert('Sucesso', `${typeMappings[type]} criado com sucesso`);
+      let dataToSubmit = formData;
+
+      if (type === 'project') {
+        dataToSubmit = {
+          ...formData,
+          totalValue: Number(cleanCurrencyValue(formData.totalValue)),
+        };
+      }
+
+      console.log('Project', dataToSubmit);
+      await endpoint(dataToSubmit);
       navigation.goBack();
     } catch (error) {
       console.error('Erro ao criar:', error);
@@ -317,7 +337,11 @@ const RegisterForm = <T extends keyof FormState>({
       placeholder={placeholder}
       placeholderTextColor={theme.colors.placeholder}
       value={formData[name] as string}
-      onChangeText={value => handleChange(name, value)}
+      onChangeText={value =>
+        type === 'money'
+          ? handleProjectChange(name, value)
+          : handleChange(name, value)
+      }
       keyboardType={
         type === 'money' ||
         type === 'cpf' ||
