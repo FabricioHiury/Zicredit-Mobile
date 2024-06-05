@@ -230,6 +230,7 @@ export const createCompany = async (companyData: any) => {
 
 export const createProject = async (projectData: any) => {
   try {
+    console.log('Project ', projectData);
     const response = await api.post(
       HttpRoutes.project.createProject.url,
       projectData,
@@ -244,6 +245,7 @@ export const createProject = async (projectData: any) => {
 export const createUser = async (userData: any) => {
   try {
     const response = await api.post(HttpRoutes.user.createUser.url, userData);
+    console.log(response.data);
     return response.data;
   } catch (error: any) {
     console.error('Erro ao criar usuário:', error.response.data);
@@ -298,11 +300,10 @@ export const getInvestorsByCompanyAndUserId = async (
   paginationParams = {},
 ) => {
   try {
-    const url =
-      HttpRoutes.investment.getInvestorsByCompanyId.url.replace(
-        ':companyId',
-        companyId,
-      );
+    const url = HttpRoutes.investment.getInvestorsByCompanyId.url.replace(
+      ':companyId',
+      companyId,
+    );
     const response = await api.get(url, {
       params: {...paginationParams, userId},
     });

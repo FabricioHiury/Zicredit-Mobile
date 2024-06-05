@@ -23,6 +23,7 @@ export const useStyles = () => {
       borderWidth: 1,
       height: 115,
       justifyContent: 'center',
+      marginBottom: 10,
     },
     itemTextPrimary: {
       fontSize: 20,
