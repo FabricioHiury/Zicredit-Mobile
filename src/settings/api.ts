@@ -146,6 +146,7 @@ export const getCompanies = async (page: number = 1, query: string = '') => {
       search: query,
     },
   });
+  console.log('response: ', extractData(response));
   return extractData(response);
 };
 
@@ -244,8 +245,8 @@ export const createProject = async (projectData: any) => {
 
 export const createUser = async (userData: any) => {
   try {
+    console.log('Response User: ', userData);
     const response = await api.post(HttpRoutes.user.createUser.url, userData);
-    console.log(response.data);
     return response.data;
   } catch (error: any) {
     console.error('Erro ao criar usuário:', error.response.data);
@@ -255,6 +256,7 @@ export const createUser = async (userData: any) => {
 
 export const createInvestor = async (investorData: any) => {
   try {
+    console.log('InvestorData: ', investorData);
     const response = await api.post(
       HttpRoutes.investment.createInvestor.url,
       investorData,

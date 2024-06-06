@@ -98,6 +98,7 @@ export const useStyles = () => {
       borderRadius: 10,
       fontSize: 16,
       fontWeight: '500',
+      marginBottom: 10,
     },
     placeholderText: {
       color: theme.colors.placeholder,

@@ -7,6 +7,7 @@ import {
   Alert,
   RefreshControl,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import {useStyles} from './styles';
 import {
@@ -49,6 +50,7 @@ const renderItem = (
   let secondaryText = '';
   let id = item.id;
   let itemType = type;
+  let imageUrl = '';
 
   if (userRole === 'COMPANY') {
     switch (type) {
@@ -69,6 +71,7 @@ const renderItem = (
       case 'companies':
         primaryText = item.name;
         secondaryText = item.address;
+        imageUrl = item.logo;
         break;
       case 'projects':
         primaryText = item.name;
@@ -101,8 +104,15 @@ const renderItem = (
           navigation.navigate('Details', {id, type: itemType});
         }
       }}>
-      <Text style={styles.itemTextPrimary}>{primaryText}</Text>
-      <Text style={styles.itemTextSecondary}>{secondaryText}</Text>
+      <View style={styles.itemContent}>
+        {type === 'companies' && imageUrl ? (
+          <Image source={{uri: imageUrl}} style={styles.itemImage} />
+        ) : null}
+        <View style={styles.textContainer}>
+          <Text style={styles.itemTextPrimary}>{primaryText}</Text>
+          <Text style={styles.itemTextSecondary}>{secondaryText}</Text>
+        </View>
+      </View>
     </TouchableOpacity>
   );
 };

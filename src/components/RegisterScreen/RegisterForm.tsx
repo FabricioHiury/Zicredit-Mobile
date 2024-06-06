@@ -67,7 +67,6 @@ type SellerForm = {
   password: string;
   phone: string;
   role: string;
-  companyId: string;
 };
 
 type InvestorForm = {
@@ -121,7 +120,6 @@ const initialFormState: FormState = {
     password: '',
     phone: '',
     role: 'SELLER',
-    companyId: '',
   },
   investor: {
     name: '',
@@ -162,13 +160,13 @@ const formInputs: {
     {name: 'email', placeholder: 'Email'},
     {name: 'userName', placeholder: 'Nome do Usuário'},
     {name: 'userEmail', placeholder: 'Email do Usuário'},
+    {name: 'userCpf', placeholder: 'CPF do Usuário'},
+    {name: 'userPhone', placeholder: 'Telefone do Usuário'},
     {
       name: 'userPassword',
       placeholder: 'Senha do Usuário',
       secureTextEntry: true,
     },
-    {name: 'userCpf', placeholder: 'CPF do Usuário'},
-    {name: 'userPhone', placeholder: 'Telefone do Usuário'},
   ],
   project: [
     {name: 'name', placeholder: 'Nome'},
@@ -180,8 +178,8 @@ const formInputs: {
     {name: 'name', placeholder: 'Nome'},
     {name: 'cpf', placeholder: 'CPF'},
     {name: 'email', placeholder: 'Email'},
-    {name: 'password', placeholder: 'Senha', secureTextEntry: true},
     {name: 'phone', placeholder: 'Telefone'},
+    {name: 'password', placeholder: 'Senha', secureTextEntry: true},
   ],
   investor: [
     {name: 'name', placeholder: 'Nome'},
@@ -267,7 +265,13 @@ const RegisterForm = <T extends keyof FormState>({
   ) => {
     const updatedInvestments = (formData as InvestorForm).investments.map(
       (investment, i) =>
-        i === index ? {...investment, [name]: value} : investment,
+        i === index
+          ? {
+              ...investment,
+              [name]:
+                name === 'amountInvested' ? cleanCurrencyValue(value) : value,
+            }
+          : investment,
     );
     setFormData({
       ...formData,
@@ -288,7 +292,25 @@ const RegisterForm = <T extends keyof FormState>({
         };
       }
 
-      console.log('Project', dataToSubmit);
+      if (type === 'seller') {
+        delete dataToSubmit.companyId;
+      }
+
+      if (type === 'investor') {
+        dataToSubmit = {
+          ...formData,
+          investments: (formData as InvestorForm).investments.map(
+            investment => ({
+              ...investment,
+              amountInvested: Number(
+                cleanCurrencyValue(String(investment.amountInvested)),
+              ),
+            }),
+          ),
+        };
+      }
+
+      console.log('Form Data:', dataToSubmit);
       await endpoint(dataToSubmit);
       navigation.goBack();
     } catch (error) {
