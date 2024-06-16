@@ -112,5 +112,27 @@ export const useStyles = () => {
       fontSize: 20,
       color: theme.colors.textColor,
     },
+    sectionTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 10,
+      color: theme.colors.textColor,
+    },
+    uploadButton: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      padding: 15,
+      marginVertical: 10,
+      backgroundColor: theme.colors.background,
+      borderRadius: 10,
+      borderWidth: 1,
+      borderColor: theme.colors.placeholder,
+      borderStyle: 'dashed',
+    },
+    uploadButtonText: {
+      marginLeft: 10,
+      fontSize: 16,
+      color: theme.colors.textColor,
+    },
   });
 };

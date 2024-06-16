@@ -229,12 +229,16 @@ export const createCompany = async (companyData: any) => {
   }
 };
 
-export const createProject = async (projectData: any) => {
+export const createProject = async (projectData: FormData) => {
   try {
-    console.log('Project ', projectData);
     const response = await api.post(
       HttpRoutes.project.createProject.url,
       projectData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      },
     );
     return response.data;
   } catch (error: any) {
@@ -264,6 +268,7 @@ export const createInvestor = async (investorData: any) => {
     return response.data;
   } catch (error: any) {
     console.error('Erro ao criar investidor:', error.response.data);
+    console.error('Erro ao criar investidor:', error.message);
     throw error;
   }
 };
