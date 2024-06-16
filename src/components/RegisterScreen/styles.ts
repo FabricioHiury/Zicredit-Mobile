@@ -136,3 +136,21 @@ export const useStyles = () => {
     },
   });
 };
+
+export const getUploadButtonStyle = (isSelected: any, theme: any) => ({
+  flexDirection: 'row',
+  alignItems: 'center',
+  padding: 15,
+  marginVertical: 10,
+  backgroundColor: theme.colors.background,
+  borderRadius: 10,
+  borderWidth: 1,
+  borderColor: isSelected ? 'lightgreen' : theme.colors.placeholder,
+  borderStyle: 'dashed',
+});
+
+export const getUploadButtonTextStyle = (isSelected: any, theme: any) => ({
+  marginLeft: 10,
+  fontSize: 16,
+  color: isSelected ? 'lightgreen' : theme.colors.textColor,
+});
