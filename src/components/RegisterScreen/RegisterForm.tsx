@@ -527,7 +527,7 @@ const RegisterForm = <T extends keyof FormState>({
                 onPress={handleSelectPdf}
                 style={getUploadButtonStyle(!!selectedPdf, theme)}>
                 <Icon
-                  name={selectedPdf ? 'check_circle' : 'description'}
+                  name={selectedPdf ? 'check-circle' : 'description'}
                   size={20}
                   color={selectedPdf ? 'lightgreen' : theme.colors.textColor}
                 />
@@ -540,7 +540,7 @@ const RegisterForm = <T extends keyof FormState>({
                 style={getUploadButtonStyle(selectedImages.length > 0, theme)}>
                 <Icon
                   name={
-                    selectedImages.length > 0 ? 'check_circle' : 'photo-library'
+                    selectedImages.length > 0 ? 'check-circle' : 'photo-library'
                   }
                   size={20}
                   color={
