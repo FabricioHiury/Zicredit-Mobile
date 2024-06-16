@@ -13,7 +13,11 @@ import {
   TextInput,
 } from 'react-native';
 import {TextInputMask} from 'react-native-masked-text';
-import {useStyles} from './styles';
+import {
+  getUploadButtonStyle,
+  getUploadButtonTextStyle,
+  useStyles,
+} from './styles';
 import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import Header from '../Header';
@@ -219,6 +223,8 @@ const RegisterForm = <T extends keyof FormState>({
   const [modalProjectVisible, setModalProjectVisible] = useState(false);
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedPdf, setSelectedPdf] = useState(null);
+  const [isPdfSelected, setIsPdfSelected] = useState(false);
+  const [areImagesSelected, setAreImagesSelected] = useState(false);
 
   const fetchCompanies = async (page: number, query: string = '') => {
     try {
@@ -336,6 +342,7 @@ const RegisterForm = <T extends keyof FormState>({
         mediaType: 'photo',
       });
       setSelectedImages(images);
+      setAreImagesSelected(true);
     } catch (error) {
       console.error('Error selecting images:', error);
     }
@@ -347,6 +354,7 @@ const RegisterForm = <T extends keyof FormState>({
         type: [DocumentPicker.types.pdf],
       });
       setSelectedPdf(result);
+      setIsPdfSelected(true);
     } catch (error) {
       if (DocumentPicker.isCancel(error)) {
         console.log('User cancelled document picker');
@@ -517,23 +525,37 @@ const RegisterForm = <T extends keyof FormState>({
               </Text>
               <TouchableOpacity
                 onPress={handleSelectPdf}
-                style={styles.uploadButton}>
+                style={getUploadButtonStyle(!!selectedPdf, theme)}>
                 <Icon
-                  name="description"
+                  name={selectedPdf ? 'check_circle' : 'description'}
                   size={20}
-                  color={theme.colors.textColor}
+                  color={selectedPdf ? 'lightgreen' : theme.colors.textColor}
                 />
-                <Text style={styles.uploadButtonText}>Anexar arquivo</Text>
+                <Text style={getUploadButtonTextStyle(!!selectedPdf, theme)}>
+                  Anexar arquivo
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={handleSelectImages}
-                style={styles.uploadButton}>
+                style={getUploadButtonStyle(selectedImages.length > 0, theme)}>
                 <Icon
-                  name="photo-library"
+                  name={
+                    selectedImages.length > 0 ? 'check_circle' : 'photo-library'
+                  }
                   size={20}
-                  color={theme.colors.textColor}
+                  color={
+                    selectedImages.length > 0
+                      ? 'lightgreen'
+                      : theme.colors.textColor
+                  }
                 />
-                <Text style={styles.uploadButtonText}>Anexar imagens</Text>
+                <Text
+                  style={getUploadButtonTextStyle(
+                    selectedImages.length > 0,
+                    theme,
+                  )}>
+                  Anexar imagens
+                </Text>
               </TouchableOpacity>
             </View>
           )}
