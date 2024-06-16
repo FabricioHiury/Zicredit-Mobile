@@ -18,6 +18,9 @@ import {useNavigation} from '@react-navigation/native';
 import {useAuth} from '../../context/AuthContext/AuthContext';
 import Header from '../Header';
 import {useTheme} from '../../assets/themes/ThemeContext';
+import DocumentPicker from 'react-native-document-picker';
+import ImagePicker from 'react-native-image-crop-picker';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 import {
   getCompanies,
   getProjects,
@@ -214,6 +217,8 @@ const RegisterForm = <T extends keyof FormState>({
   const [searchQuery, setSearchQuery] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [modalProjectVisible, setModalProjectVisible] = useState(false);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedPdf, setSelectedPdf] = useState(null);
 
   const fetchCompanies = async (page: number, query: string = '') => {
     try {
@@ -302,8 +307,9 @@ const RegisterForm = <T extends keyof FormState>({
           investments: (formData as InvestorForm).investments.map(
             investment => ({
               ...investment,
-              amountInvested: Number(
-                cleanCurrencyValue(String(investment.amountInvested)),
+              amountInvested: Math.floor(
+                Number(cleanCurrencyValue(String(investment.amountInvested))) /
+                  100,
               ),
             }),
           ),
@@ -321,6 +327,33 @@ const RegisterForm = <T extends keyof FormState>({
       );
     }
     setLoading(false);
+  };
+
+  const handleSelectImages = async () => {
+    try {
+      const images = await ImagePicker.openPicker({
+        multiple: true,
+        mediaType: 'photo',
+      });
+      setSelectedImages(images);
+    } catch (error) {
+      console.error('Error selecting images:', error);
+    }
+  };
+
+  const handleSelectPdf = async () => {
+    try {
+      const result = await DocumentPicker.pickSingle({
+        type: [DocumentPicker.types.pdf],
+      });
+      setSelectedPdf(result);
+    } catch (error) {
+      if (DocumentPicker.isCancel(error)) {
+        console.log('User cancelled document picker');
+      } else {
+        console.error('Error picking document:', error);
+      }
+    }
   };
 
   const renderInput = (
@@ -476,6 +509,33 @@ const RegisterForm = <T extends keyof FormState>({
             ) : (
               renderInput(input.name, input.placeholder, input.secureTextEntry)
             ),
+          )}
+          {type === 'project' && (
+            <View>
+              <Text style={styles.sectionTitle}>
+                Anexe o relatório de cronograma da obra
+              </Text>
+              <TouchableOpacity
+                onPress={handleSelectPdf}
+                style={styles.uploadButton}>
+                <Icon
+                  name="description"
+                  size={20}
+                  color={theme.colors.textColor}
+                />
+                <Text style={styles.uploadButtonText}>Anexar arquivo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={handleSelectImages}
+                style={styles.uploadButton}>
+                <Icon
+                  name="photo-library"
+                  size={20}
+                  color={theme.colors.textColor}
+                />
+                <Text style={styles.uploadButtonText}>Anexar imagens</Text>
+              </TouchableOpacity>
+            </View>
           )}
           {type === 'investor' &&
             (formData as InvestorForm).investments.map((_, index) => (
